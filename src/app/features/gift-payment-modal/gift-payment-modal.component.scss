@@ -94,7 +94,8 @@ button:disabled {
 }
 
 button.secondary,
-.choice-group button {
+.choice-group button,
+.payment-methods button {
   color: #4b3b31;
   background: #efe5d9;
 }
@@ -119,9 +120,17 @@ button.secondary,
   margin: 22px 0;
 }
 
-.choice-group button.active {
+.choice-group button.active,
+.payment-methods button.active {
   color: #fffdf8;
   background: #7d4c32;
+}
+
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 14px 0;
 }
 
 .quota {
@@ -156,6 +165,11 @@ button.secondary,
 .payment-box {
   grid-template-columns: 1fr auto;
   align-items: center;
+}
+
+.payment-box__hint {
+  color: #89786a;
+  font-weight: 800;
 }
 
 .payment-box span,
@@ -199,7 +213,8 @@ button.secondary,
 }
 
 .success,
-.error {
+.error,
+.status-note {
   margin: 14px 0 0;
   padding: 12px 14px;
   border-radius: 6px;
@@ -216,11 +231,17 @@ button.secondary,
   background: #fae8e6;
 }
 
+.status-note {
+  color: #5e4a36;
+  background: #f5eadb;
+}
+
 @media (max-width: 760px) {
   .modal,
   .payment-box,
   .pix-panel,
   .choice-group,
+  .payment-methods,
   .contributor-grid {
     grid-template-columns: 1fr;
   }

@@ -1,5 +1,6 @@
 <main>
   <app-hero [coupleName]="weddingInfo.coupleName" [weddingDate]="weddingInfo.date" />
+  <a class="admin-link" routerLink="/login" aria-label="Area administrativa">Admin</a>
   <app-rsvp-form />
   <app-gift-list [gifts]="gifts()" (giftSelected)="chooseGift($event)" />
   <app-event-info [eventCards]="weddingInfo.eventCards" />

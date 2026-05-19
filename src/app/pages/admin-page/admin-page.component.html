@@ -1,0 +1,21 @@
+<main class="admin-page">
+  <header>
+    <a routerLink="/">Site</a>
+    <button type="button" (click)="logout()">Sair</button>
+  </header>
+
+  <section>
+    <p class="eyebrow">Area administrativa</p>
+    <h1>Casamento Ana & Kaio</h1>
+
+    @if (user(); as currentUser) {
+      <p class="user-line">{{ currentUser.name }} · {{ currentUser.email }}</p>
+    }
+
+    <div class="actions">
+      <a href="/api/gifts">Presentes</a>
+      <a href="/api/guest-confirmations">Confirmacoes</a>
+      <a href="/api/admin/me">Validar JWT</a>
+    </div>
+  </section>
+</main>

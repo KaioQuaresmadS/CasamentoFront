@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { GiftApiService } from '../../application/api/gift-api.service';
 import { GIFTS, WEDDING_INFO } from '../../application/data/wedding-content.data';
@@ -16,6 +17,7 @@ import { RsvpFormComponent } from '../../features/rsvp-form/rsvp-form.component'
     GiftListComponent,
     GiftPaymentModalComponent,
     HeroComponent,
+    RouterLink,
     RsvpFormComponent
   ],
   templateUrl: './wedding-page.component.html',

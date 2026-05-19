@@ -29,6 +29,12 @@ export interface GiftContributionResponse {
   paidAt: string | null;
 }
 
+export interface PaymentStatusResponse {
+  id: string;
+  paymentStatus: string;
+  paidAt: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class GiftContributionApiService {
   constructor(private readonly http: HttpClient) {}
@@ -51,8 +57,7 @@ export class GiftContributionApiService {
     return this.http.post<GiftContributionResponse>(`${API_BASE_URL}/gift-contributions`, request);
   }
 
-  simulatePayment(contributionId: string, success: boolean): Observable<{ paymentStatus: string }> {
-    const action = success ? 'simulate-success' : 'simulate-failure';
-    return this.http.post<{ paymentStatus: string }>(`${API_BASE_URL}/payments/${contributionId}/${action}`, {});
+  getStatus(contributionId: string): Observable<PaymentStatusResponse> {
+    return this.http.get<PaymentStatusResponse>(`${API_BASE_URL}/gift-contributions/${contributionId}/status`);
   }
 }

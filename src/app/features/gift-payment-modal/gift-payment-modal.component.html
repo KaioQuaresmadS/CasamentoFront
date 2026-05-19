@@ -44,49 +44,63 @@
           <span>Total</span>
           <strong>{{ paymentAmount | currency:'BRL':'symbol':'1.2-2' }}</strong>
         </div>
-        <button type="button" [disabled]="isCreatingPayment()" (click)="startPayment()">
-          {{ isCreatingPayment() ? 'Gerando...' : 'Gerar Pix' }}
+        <span class="payment-box__hint">Escolha como deseja pagar</span>
+      </div>
+
+      <div class="payment-methods" aria-label="Forma de pagamento">
+        <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'pix' }" (click)="choosePaymentMethod('pix')">
+          PIX
+        </button>
+        <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'credit-card' }" (click)="choosePaymentMethod('credit-card')">
+          Cartao de credito
+        </button>
+        <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'boleto' }" (click)="choosePaymentMethod('boleto')">
+          Boleto
         </button>
       </div>
 
+      @if (selectedPaymentMethod() === 'pix') {
+        <button type="button" [disabled]="isCreatingPayment()" (click)="startPayment()">
+          {{ isCreatingPayment() ? 'Gerando...' : 'Gerar PIX' }}
+        </button>
+      }
+
       @if (paymentError()) {
         <p class="error">{{ paymentError() }}</p>
+      }
+
+      @if (paymentValidationMessage() && paymentStatus() === 'idle') {
+        <p class="status-note">{{ paymentValidationMessage() }}</p>
       }
 
       @if (paymentStatus() !== 'idle') {
         <div class="pix-panel">
           <img [src]="qrCodeUrl" alt="QRCode Pix" />
           <div>
-            <span>Chave Pix</span>
-            <strong>{{ currentPixKey }}</strong>
+            <span>Pix Copia e Cola</span>
+            <strong>{{ currentPixCopyPaste }}</strong>
             <button type="button" class="text-button" (click)="copyPixKey()">
-              {{ copiedPix() ? 'Chave copiada' : 'Copiar chave Pix' }}
+              {{ copiedPix() ? 'Pix copiado' : 'Copiar Pix Copia e Cola' }}
             </button>
           </div>
         </div>
 
         <div class="auth-panel">
-          <p>
-            Autenticador de pagamento: em produção, o ASP.NET receberá o webhook do provedor Pix
-            e atualizará este status automaticamente.
-          </p>
+          <p>{{ paymentValidationMessage() }}</p>
           <div class="auth-panel__actions">
-            <button type="button" [disabled]="isConfirmingPayment()" (click)="confirmPayment(true)">
-              Simular pagamento aprovado
-            </button>
-            <button type="button" class="secondary" [disabled]="isConfirmingPayment()" (click)="confirmPayment(false)">
-              Simular erro
+            <button type="button" [disabled]="isConfirmingPayment()" (click)="verifyPaymentNow()">
+              {{ isConfirmingPayment() ? 'Verificando...' : 'Verificar pagamento' }}
             </button>
           </div>
         </div>
       }
 
       @if (paymentStatus() === 'confirmed') {
-        <p class="success">Pagamento confirmado. Obrigado por fazer parte da nossa história!</p>
+        <p class="success">Pagamento confirmado. Obrigado por fazer parte da nossa historia!</p>
       }
 
       @if (paymentStatus() === 'failed') {
-        <p class="error">Não conseguimos confirmar o pagamento. Confira o Pix ou tente novamente.</p>
+        <p class="error">Pagamento recusado ou expirado.</p>
       }
     </div>
   </section>

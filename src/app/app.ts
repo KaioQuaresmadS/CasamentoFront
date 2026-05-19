@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { WeddingPageComponent } from './pages/wedding-page/wedding-page.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [WeddingPageComponent],
-  template: '<app-wedding-page />'
+  imports: [RouterOutlet],
+  template: '<router-outlet />'
 })
 export class App {}
