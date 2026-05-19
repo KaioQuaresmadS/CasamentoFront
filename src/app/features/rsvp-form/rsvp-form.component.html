@@ -1,0 +1,61 @@
+<section class="section split" id="presenca">
+  <div>
+    <p class="eyebrow">RSVP</p>
+    <h2>Confirme sua presença</h2>
+    <p>
+      Sua resposta ajuda a gente a preparar tudo com carinho: quantidade de lugares,
+      comida, bebidas e detalhes importantes para receber todo mundo bem.
+    </p>
+  </div>
+
+  <form class="rsvp" (ngSubmit)="submitRsvp()" #rsvpForm="ngForm">
+    <label>
+      Nome completo
+      <input type="text" name="fullName" [(ngModel)]="attendanceForm.fullName" required placeholder="Seu nome" />
+    </label>
+
+    <label>
+      Acompanhantes
+      <input type="number" name="guests" [(ngModel)]="attendanceForm.guests" min="0" max="10" />
+    </label>
+
+    <label>
+      Celular
+      <input type="tel" name="phone" [(ngModel)]="attendanceForm.phone" required placeholder="(00) 00000-0000" />
+    </label>
+
+    <fieldset>
+      <legend>Você irá ao casamento?</legend>
+      <label class="radio">
+        <input type="radio" name="attendance" [(ngModel)]="attendanceForm.attendance" value="sim" required />
+        Sim, estarei lá
+      </label>
+      <label class="radio">
+        <input type="radio" name="attendance" [(ngModel)]="attendanceForm.attendance" value="nao" required />
+        Não poderei ir
+      </label>
+    </fieldset>
+
+    <label>
+      Alguma informação importante?
+      <textarea
+        name="notes"
+        [(ngModel)]="attendanceForm.notes"
+        rows="4"
+        placeholder="Restrição alimentar, crianças, recado..."
+      ></textarea>
+    </label>
+
+    <button type="submit" [disabled]="rsvpForm.invalid || isSubmitting()">
+      {{ isSubmitting() ? 'Enviando...' : 'Enviar confirmação' }}
+    </button>
+
+    @if (rsvpSent()) {
+      <p class="success">Confirmação salva no backend. Obrigado por responder!</p>
+    }
+
+    @if (submitError()) {
+      <p class="error">{{ submitError() }}</p>
+    }
+  </form>
+</section>

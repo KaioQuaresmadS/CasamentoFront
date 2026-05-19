@@ -1,0 +1,10 @@
+<main>
+  <app-hero [coupleName]="weddingInfo.coupleName" [weddingDate]="weddingInfo.date" />
+  <app-rsvp-form />
+  <app-gift-list [gifts]="gifts()" (giftSelected)="chooseGift($event)" />
+  <app-event-info [eventCards]="weddingInfo.eventCards" />
+</main>
+
+@if (selectedGift(); as gift) {
+  <app-gift-payment-modal [gift]="gift" [pixKey]="weddingInfo.pixKey" (closed)="closeGift()" />
+}

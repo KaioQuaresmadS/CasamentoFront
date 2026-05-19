@@ -1,0 +1,56 @@
+.section {
+  padding: clamp(56px, 8vw, 104px) clamp(18px, 6vw, 72px);
+}
+
+.event-info {
+  background: #fffdf9;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: #9c6f49;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 0;
+  color: #3a302a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 500;
+  line-height: 1;
+}
+
+p {
+  color: #6b6158;
+  line-height: 1.7;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.info-grid article {
+  border-left: 4px solid #a26c45;
+  padding: 8px 0 8px 18px;
+}
+
+.info-grid span {
+  display: block;
+  margin-bottom: 6px;
+  color: #89786a;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.info-grid strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #3a302a;
+  font-size: 1.2rem;
+}

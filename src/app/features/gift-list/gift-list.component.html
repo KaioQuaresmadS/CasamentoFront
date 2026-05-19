@@ -1,0 +1,30 @@
+<section class="section gifts" id="presentes">
+  <div class="section__intro">
+    <p class="eyebrow">Presentes</p>
+    <h2>Escolha um presente ou uma cota</h2>
+    <p>
+      A ideia é simples: você pode contribuir com o valor total de um item ou comprar cotas
+      de 5% para ajudar na compra. Depois da escolha, o site mostra o Pix e acompanha a
+      confirmação pelo backend.
+    </p>
+  </div>
+
+  <div class="gift-grid">
+    @for (gift of gifts; track gift.id) {
+      <article class="gift-card">
+        <img [src]="gift.image" [alt]="gift.name" loading="lazy" />
+        <div class="gift-card__body">
+          <h3>{{ gift.name }}</h3>
+          <p>{{ gift.description }}</p>
+          <div class="progress" aria-label="Percentual já reservado">
+            <span [style.width.%]="gift.reservedPercent"></span>
+          </div>
+          <div class="gift-card__footer">
+            <strong>{{ gift.price | currency:'BRL':'symbol':'1.2-2' }}</strong>
+            <button type="button" (click)="giftSelected.emit(gift)">Escolher</button>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>

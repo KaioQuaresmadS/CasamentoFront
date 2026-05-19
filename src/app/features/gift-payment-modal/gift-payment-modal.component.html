@@ -1,0 +1,93 @@
+<div class="modal-backdrop" role="presentation" (click)="closed.emit()">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="gift-title" (click)="$event.stopPropagation()">
+    <button class="icon-button" type="button" aria-label="Fechar" (click)="closed.emit()">x</button>
+    <img [src]="gift.image" [alt]="gift.name" />
+
+    <div class="modal__content">
+      <p class="eyebrow">Presente escolhido</p>
+      <h2 id="gift-title">{{ gift.name }}</h2>
+      <p>{{ gift.description }}</p>
+
+      <div class="contributor-grid">
+        <label>
+          Seu nome
+          <input type="text" name="contributorName" [(ngModel)]="contributor.name" placeholder="Nome completo" />
+        </label>
+        <label>
+          Celular
+          <input type="tel" name="contributorPhone" [(ngModel)]="contributor.phone" placeholder="(00) 00000-0000" />
+        </label>
+      </div>
+
+      <div class="choice-group" aria-label="Tipo de compra">
+        <button type="button" [ngClass]="{ active: selectedMode() === 'full' }" (click)="setMode('full')">
+          Comprar presente
+        </button>
+        <button type="button" [ngClass]="{ active: selectedMode() === 'quota' }" (click)="setMode('quota')">
+          Comprar cota
+        </button>
+      </div>
+
+      @if (selectedMode() === 'quota') {
+        <label class="quota">
+          Quantidade de cotas
+          <input type="range" min="1" max="20" [value]="quotaQuantity()" (input)="updateQuotaQuantity($event)" />
+          <span>
+            {{ quotaQuantity() }} cota(s) de
+            {{ quotaValue | currency:'BRL':'symbol':'1.2-2' }}
+          </span>
+        </label>
+      }
+
+      <div class="payment-box">
+        <div>
+          <span>Total</span>
+          <strong>{{ paymentAmount | currency:'BRL':'symbol':'1.2-2' }}</strong>
+        </div>
+        <button type="button" [disabled]="isCreatingPayment()" (click)="startPayment()">
+          {{ isCreatingPayment() ? 'Gerando...' : 'Gerar Pix' }}
+        </button>
+      </div>
+
+      @if (paymentError()) {
+        <p class="error">{{ paymentError() }}</p>
+      }
+
+      @if (paymentStatus() !== 'idle') {
+        <div class="pix-panel">
+          <img [src]="qrCodeUrl" alt="QRCode Pix" />
+          <div>
+            <span>Chave Pix</span>
+            <strong>{{ currentPixKey }}</strong>
+            <button type="button" class="text-button" (click)="copyPixKey()">
+              {{ copiedPix() ? 'Chave copiada' : 'Copiar chave Pix' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-panel">
+          <p>
+            Autenticador de pagamento: em produção, o ASP.NET receberá o webhook do provedor Pix
+            e atualizará este status automaticamente.
+          </p>
+          <div class="auth-panel__actions">
+            <button type="button" [disabled]="isConfirmingPayment()" (click)="confirmPayment(true)">
+              Simular pagamento aprovado
+            </button>
+            <button type="button" class="secondary" [disabled]="isConfirmingPayment()" (click)="confirmPayment(false)">
+              Simular erro
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (paymentStatus() === 'confirmed') {
+        <p class="success">Pagamento confirmado. Obrigado por fazer parte da nossa história!</p>
+      }
+
+      @if (paymentStatus() === 'failed') {
+        <p class="error">Não conseguimos confirmar o pagamento. Confira o Pix ou tente novamente.</p>
+      }
+    </div>
+  </section>
+</div>
