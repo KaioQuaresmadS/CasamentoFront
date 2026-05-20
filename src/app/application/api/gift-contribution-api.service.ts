@@ -22,7 +22,6 @@ export interface GiftContributionResponse {
   quotaQuantity: number;
   amount: number;
   paymentStatus: string;
-  pixKey: string;
   qrCodePayload: string;
   qrCodeUrl: string;
   createdAt: string;

@@ -7,6 +7,5 @@ export interface EventInfoCard {
 export interface WeddingInfo {
   coupleName: string;
   date: string;
-  pixKey: string;
   eventCards: EventInfoCard[];
 }

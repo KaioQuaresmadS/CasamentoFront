@@ -3,8 +3,7 @@ import { WeddingInfo } from '../../domain/models/wedding-info.model';
 
 export const WEDDING_INFO: WeddingInfo = {
   coupleName: 'Ana & Kaio',
-  date: '20 de Setembro de 2026',
-  pixKey: 'anaekaio@email.com',
+  date: '10 de Outubro de 2026',
   eventCards: [
     {
       label: 'Local',

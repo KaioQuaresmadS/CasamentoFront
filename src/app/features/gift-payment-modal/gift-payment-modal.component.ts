@@ -21,7 +21,6 @@ type PaymentResponse = CreateMercadoPagoPaymentResponse;
 })
 export class GiftPaymentModalComponent {
   @Input({ required: true }) gift!: Gift;
-  @Input() pixKey = '';
   @Output() closed = new EventEmitter<void>();
 
   readonly selectedMode = signal<GiftPurchaseMode>('full');

@@ -7,5 +7,5 @@
 </main>
 
 @if (selectedGift(); as gift) {
-  <app-gift-payment-modal [gift]="gift" [pixKey]="weddingInfo.pixKey" (closed)="closeGift()" />
+  <app-gift-payment-modal [gift]="gift" (closed)="closeGift()" />
 }
