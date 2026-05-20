@@ -11,15 +11,15 @@
       <div class="contributor-grid">
         <label>
           Seu nome
-          <input type="text" name="contributorName" [(ngModel)]="contributor.name" placeholder="Nome completo" />
+          <input type="text" name="contributorName" [(ngModel)]="contributor.name" placeholder="Nome completo" required />
         </label>
         <label>
           Email
-          <input type="email" name="contributorEmail" [(ngModel)]="contributor.email" placeholder="voce@email.com" />
+          <input type="email" name="contributorEmail" [(ngModel)]="contributor.email" placeholder="voce@email.com" required />
         </label>
         <label>
           Celular
-          <input type="tel" name="contributorPhone" [(ngModel)]="contributor.phone" placeholder="(00) 00000-0000" />
+          <input type="tel" name="contributorPhone" [(ngModel)]="contributor.phone" placeholder="(00) 00000-0000" required />
         </label>
       </div>
 
@@ -74,6 +74,46 @@
       @if (paymentValidationMessage()) {
         <div class="auth-panel">
           <p>{{ paymentValidationMessage() }}</p>
+
+          @if (paymentCheckoutUrl) {
+            <button type="button" (click)="openPaymentUrl()">
+              {{ paymentActionLabel }}
+            </button>
+          }
+
+          @if (paymentPixQrCodeImage) {
+            <div class="pix-panel">
+              <img [src]="paymentPixQrCodeImage" alt="QR Code Pix" />
+              <div>
+                <span>Pix copia e cola</span>
+                @if (paymentPixCode) {
+                  <code>{{ paymentPixCode }}</code>
+                  <button class="text-button" type="button" (click)="copyPaymentText(paymentPixCode)">
+                    Copiar codigo Pix
+                  </button>
+                }
+              </div>
+            </div>
+          } @else if (paymentPixCode) {
+            <div class="payment-copy">
+              <span>Pix copia e cola</span>
+              <code>{{ paymentPixCode }}</code>
+              <button class="text-button" type="button" (click)="copyPaymentText(paymentPixCode)">
+                Copiar codigo Pix
+              </button>
+            </div>
+          }
+
+          @if (boletoLine) {
+            <div class="payment-copy">
+              <span>Linha digitavel</span>
+              <code>{{ boletoLine }}</code>
+              <button class="text-button" type="button" (click)="copyPaymentText(boletoLine)">
+                Copiar linha digitavel
+              </button>
+            </div>
+          }
+
           @if (payment()) {
             <div class="auth-panel__actions">
               <button type="button" [disabled]="isConfirmingPayment()" (click)="verifyPaymentNow()">

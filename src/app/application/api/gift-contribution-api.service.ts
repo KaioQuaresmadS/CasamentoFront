@@ -50,13 +50,32 @@ export interface CreateMercadoPagoPaymentRequest {
 export interface CreateMercadoPagoPaymentResponse {
   id: string;
   giftContributionId: string;
-  paymentStatus: string;
+  status?: string;
+  paymentStatus?: string;
   paymentMethod: MercadoPagoPaymentMethod;
   amount: number;
   preferenceId: string;
-  initPoint: string;
-  sandboxInitPoint: string;
-  createdAt: string;
+  checkoutUrl?: string;
+  paymentUrl?: string;
+  ticketUrl?: string;
+  ticket_url?: string;
+  boletoUrl?: string;
+  boleto_url?: string;
+  initPoint?: string;
+  init_point?: string;
+  sandboxInitPoint?: string;
+  sandbox_init_point?: string;
+  qrCode?: string;
+  qr_code?: string;
+  qrCodeBase64?: string;
+  qr_code_base64?: string;
+  pixCopyPaste?: string;
+  pix_copy_paste?: string;
+  barcode?: string;
+  line?: string;
+  linhaDigitavel?: string;
+  linha_digitavel?: string;
+  createdAt?: string;
 }
 
 export interface MercadoPagoPaymentStatusResponse {
