@@ -1,12 +1,12 @@
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { finalize, Subscription, switchMap, timer } from 'rxjs';
+import { finalize, Subscription, switchMap, takeWhile, timer } from 'rxjs';
 import {
+  CreateMercadoPagoPaymentResponse,
   GiftContributionApiService,
-  GiftContributionResponse
+  MercadoPagoPaymentMethod
 } from '../../application/api/gift-contribution-api.service';
-import { buildPixQrCodeUrl } from '../../application/use-cases/build-pix-qr-code';
 import { calculateGiftPayment, calculateQuotaValue } from '../../application/use-cases/calculate-gift-payment';
 import { Gift } from '../../domain/models/gift.model';
 import { GiftPurchaseMode, PaymentStatus } from '../../domain/models/payment.model';
@@ -21,24 +21,25 @@ type PaymentMethod = 'pix' | 'credit-card' | 'boleto';
 })
 export class GiftPaymentModalComponent implements OnDestroy {
   @Input({ required: true }) gift!: Gift;
-  @Input({ required: true }) pixKey = '';
+  @Input() pixKey = '';
   @Output() closed = new EventEmitter<void>();
 
   readonly selectedMode = signal<GiftPurchaseMode>('full');
   readonly quotaQuantity = signal(1);
-  readonly copiedPix = signal(false);
   readonly paymentStatus = signal<PaymentStatus>('idle');
   readonly isCreatingPayment = signal(false);
   readonly isConfirmingPayment = signal(false);
   readonly paymentError = signal('');
   readonly paymentValidationMessage = signal('');
   readonly selectedPaymentMethod = signal<PaymentMethod | null>(null);
-  readonly contribution = signal<GiftContributionResponse | null>(null);
-  private paymentStatusSubscription?: Subscription;
+  readonly payment = signal<CreateMercadoPagoPaymentResponse | null>(null);
   readonly contributor = {
     name: '',
+    email: '',
     phone: ''
   };
+
+  private paymentStatusSubscription?: Subscription;
 
   constructor(private readonly contributionApiService: GiftContributionApiService) {}
 
@@ -48,14 +49,6 @@ export class GiftPaymentModalComponent implements OnDestroy {
 
   get paymentAmount(): number {
     return calculateGiftPayment(this.gift, this.selectedMode(), this.quotaQuantity());
-  }
-
-  get qrCodeUrl(): string {
-    return this.contribution()?.qrCodeUrl ?? buildPixQrCodeUrl(this.gift, this.paymentAmount);
-  }
-
-  get currentPixCopyPaste(): string {
-    return this.contribution()?.qrCodePayload ?? this.pixKey;
   }
 
   setMode(mode: GiftPurchaseMode): void {
@@ -68,64 +61,59 @@ export class GiftPaymentModalComponent implements OnDestroy {
     this.quotaQuantity.set(Number(input.value));
   }
 
-  async copyPixKey(): Promise<void> {
-    await navigator.clipboard.writeText(this.currentPixCopyPaste);
-    this.copiedPix.set(true);
-  }
-
   choosePaymentMethod(method: PaymentMethod): void {
     this.selectedPaymentMethod.set(method);
     this.paymentError.set('');
-
-    if (method !== 'pix') {
-      this.stopPaymentStatusPolling();
-      this.contribution.set(null);
-      this.paymentStatus.set('idle');
-      this.paymentValidationMessage.set(
-        'Esta forma de pagamento precisa ser conectada ao Checkout/API do Mercado Pago antes de liberar para convidados.'
-      );
-    }
+    this.paymentValidationMessage.set('O pagamento sera finalizado no ambiente seguro do Mercado Pago.');
   }
 
   startPayment(): void {
-    if (this.selectedPaymentMethod() !== 'pix') {
-      this.paymentError.set('Selecione PIX para gerar o pagamento agora.');
+    const method = this.selectedPaymentMethod();
+    if (!method) {
+      this.paymentError.set('Escolha Pix, cartao de credito ou boleto.');
       return;
     }
 
-    if (!this.contributor.name.trim() || !this.contributor.phone.trim()) {
-      this.paymentError.set('Informe seu nome e celular para gerar o Pix.');
+    if (!this.contributor.name.trim() || !this.contributor.email.trim()) {
+      this.paymentError.set('Informe seu nome e email para iniciar o pagamento.');
       return;
     }
 
+    this.stopPaymentStatusPolling();
     this.isCreatingPayment.set(true);
     this.paymentError.set('');
+    this.paymentValidationMessage.set('Criando checkout Mercado Pago...');
 
     this.contributionApiService
-      .create(
+      .createMercadoPagoPayment(
         this.gift.id,
         this.contributor.name,
+        this.contributor.email,
         this.contributor.phone,
+        this.toApiPaymentMethod(method),
         this.selectedMode(),
         this.quotaQuantity()
       )
       .pipe(finalize(() => this.isCreatingPayment.set(false)))
       .subscribe({
         next: (response) => {
-          this.contribution.set(response);
+          this.payment.set(response);
           this.paymentStatus.set('waiting');
-          this.paymentValidationMessage.set('Aguardando confirmacao do Mercado Pago...');
+          this.paymentValidationMessage.set('Aguardando confirmacao do pagamento pelo Mercado Pago.');
+          this.openCheckout(response);
           this.startPaymentStatusPolling(response.id);
         },
         error: () => {
-          this.paymentError.set('Nao foi possivel gerar o Pix. Confira se o backend e o banco estao rodando.');
+          this.paymentStatus.set('idle');
+          this.paymentValidationMessage.set('');
+          this.paymentError.set('Nao foi possivel abrir o pagamento agora. Tente novamente em instantes.');
         }
       });
   }
 
   verifyPaymentNow(): void {
-    const contributionId = this.contribution()?.id;
-    if (!contributionId) {
+    const paymentId = this.payment()?.id;
+    if (!paymentId) {
       return;
     }
 
@@ -133,64 +121,113 @@ export class GiftPaymentModalComponent implements OnDestroy {
     this.paymentError.set('');
 
     this.contributionApiService
-      .getStatus(contributionId)
+      .getMercadoPagoPaymentStatus(paymentId)
       .pipe(finalize(() => this.isConfirmingPayment.set(false)))
       .subscribe({
-        next: (response) => {
-          this.applyPaymentStatus(response.paymentStatus);
-        },
+        next: (response) => this.applyPaymentStatus(response.paymentStatus),
         error: () => {
           this.paymentError.set('Nao foi possivel consultar a confirmacao do pagamento.');
         }
       });
   }
 
+  close(): void {
+    this.stopPaymentStatusPolling();
+    this.closed.emit();
+  }
+
   ngOnDestroy(): void {
     this.stopPaymentStatusPolling();
   }
 
-  private startPaymentStatusPolling(contributionId: string): void {
+  private openCheckout(response: CreateMercadoPagoPaymentResponse): void {
+    const checkoutUrl = response.sandboxInitPoint || response.initPoint;
+    if (checkoutUrl) {
+      window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
+    }
+  }
+
+  private startPaymentStatusPolling(paymentId: string): void {
     this.stopPaymentStatusPolling();
+    const startedAt = Date.now();
+    const maxPollingTimeMs = 10 * 60 * 1000;
+
     this.paymentStatusSubscription = timer(0, 5000)
-      .pipe(switchMap(() => this.contributionApiService.getStatus(contributionId)))
+      .pipe(
+        takeWhile(() => Date.now() - startedAt <= maxPollingTimeMs),
+        switchMap(() => this.contributionApiService.getMercadoPagoPaymentStatus(paymentId))
+      )
       .subscribe({
         next: (response) => this.applyPaymentStatus(response.paymentStatus),
         error: () => {
           this.paymentValidationMessage.set('Ainda nao foi possivel validar. Tentaremos novamente em alguns segundos.');
+        },
+        complete: () => {
+          if (this.paymentStatus() === 'waiting' || this.paymentStatus() === 'processing') {
+            this.paymentValidationMessage.set('A confirmacao ainda nao chegou. Voce pode verificar novamente em alguns minutos.');
+          }
         }
       });
   }
 
   private applyPaymentStatus(status: string): void {
-    if (status === 'Paid') {
+    const normalizedStatus = status.toLowerCase();
+    if (normalizedStatus === 'paid') {
       this.paymentStatus.set('confirmed');
-      this.paymentValidationMessage.set('Pagamento confirmado!');
+      this.paymentValidationMessage.set('Pagamento aprovado. Obrigado pelo presente!');
       this.stopPaymentStatusPolling();
       return;
     }
 
-    if (status === 'Failed') {
+    if (normalizedStatus === 'processing' || normalizedStatus === 'pending') {
+      this.paymentStatus.set(normalizedStatus === 'processing' ? 'processing' : 'waiting');
+      this.paymentValidationMessage.set('Aguardando confirmacao do pagamento pelo Mercado Pago.');
+      return;
+    }
+
+    if (normalizedStatus === 'cancelled') {
+      this.paymentStatus.set('cancelled');
+      this.paymentValidationMessage.set('Pagamento cancelado.');
+      this.stopPaymentStatusPolling();
+      return;
+    }
+
+    if (normalizedStatus === 'expired') {
+      this.paymentStatus.set('expired');
+      this.paymentValidationMessage.set('Pagamento expirado.');
+      this.stopPaymentStatusPolling();
+      return;
+    }
+
+    if (normalizedStatus === 'refunded' || normalizedStatus === 'charged_back' || normalizedStatus === 'chargedback') {
+      this.paymentStatus.set('refunded');
+      this.paymentValidationMessage.set('Pagamento estornado ou contestado.');
+      this.stopPaymentStatusPolling();
+      return;
+    }
+
+    if (normalizedStatus === 'failed') {
       this.paymentStatus.set('failed');
-      this.paymentValidationMessage.set('Pagamento recusado ou expirado.');
+      this.paymentValidationMessage.set('Pagamento recusado.');
       this.stopPaymentStatusPolling();
-      return;
     }
-
-    this.paymentStatus.set('waiting');
-    this.paymentValidationMessage.set('Aguardando confirmacao do Mercado Pago...');
   }
 
   private resetPayment(): void {
     this.stopPaymentStatusPolling();
     this.paymentStatus.set('idle');
     this.paymentValidationMessage.set('');
-    this.contribution.set(null);
+    this.payment.set(null);
     this.selectedPaymentMethod.set(null);
-    this.copiedPix.set(false);
+    this.paymentError.set('');
   }
 
   private stopPaymentStatusPolling(): void {
     this.paymentStatusSubscription?.unsubscribe();
     this.paymentStatusSubscription = undefined;
+  }
+
+  private toApiPaymentMethod(method: PaymentMethod): MercadoPagoPaymentMethod {
+    return method === 'credit-card' ? 'credit_card' : method;
   }
 }

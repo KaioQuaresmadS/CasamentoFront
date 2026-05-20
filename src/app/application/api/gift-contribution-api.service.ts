@@ -35,6 +35,39 @@ export interface PaymentStatusResponse {
   paidAt: string | null;
 }
 
+export type MercadoPagoPaymentMethod = 'pix' | 'credit_card' | 'boleto';
+
+export interface CreateMercadoPagoPaymentRequest {
+  giftId: string;
+  payerName: string;
+  payerEmail: string;
+  payerPhone: string;
+  paymentMethod: MercadoPagoPaymentMethod;
+  mode: 'FullGift' | 'Quota';
+  quotaQuantity: number;
+}
+
+export interface CreateMercadoPagoPaymentResponse {
+  id: string;
+  giftContributionId: string;
+  paymentStatus: string;
+  paymentMethod: MercadoPagoPaymentMethod;
+  amount: number;
+  preferenceId: string;
+  initPoint: string;
+  sandboxInitPoint: string;
+  createdAt: string;
+}
+
+export interface MercadoPagoPaymentStatusResponse {
+  id: string;
+  giftContributionId: string;
+  paymentStatus: string;
+  mercadoPagoStatus: string;
+  paidAt: string | null;
+  updatedAt: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class GiftContributionApiService {
   constructor(private readonly http: HttpClient) {}
@@ -59,5 +92,31 @@ export class GiftContributionApiService {
 
   getStatus(contributionId: string): Observable<PaymentStatusResponse> {
     return this.http.get<PaymentStatusResponse>(`${API_BASE_URL}/gift-contributions/${contributionId}/status`);
+  }
+
+  createMercadoPagoPayment(
+    giftId: string,
+    payerName: string,
+    payerEmail: string,
+    payerPhone: string,
+    paymentMethod: MercadoPagoPaymentMethod,
+    mode: GiftPurchaseMode,
+    quotaQuantity: number
+  ): Observable<CreateMercadoPagoPaymentResponse> {
+    const request: CreateMercadoPagoPaymentRequest = {
+      giftId,
+      payerName,
+      payerEmail,
+      payerPhone,
+      paymentMethod,
+      mode: mode === 'full' ? 'FullGift' : 'Quota',
+      quotaQuantity: mode === 'full' ? 0 : quotaQuantity
+    };
+
+    return this.http.post<CreateMercadoPagoPaymentResponse>(`${API_BASE_URL}/payments/create`, request);
+  }
+
+  getMercadoPagoPaymentStatus(paymentId: string): Observable<MercadoPagoPaymentStatusResponse> {
+    return this.http.get<MercadoPagoPaymentStatusResponse>(`${API_BASE_URL}/payments/${paymentId}/status`);
   }
 }

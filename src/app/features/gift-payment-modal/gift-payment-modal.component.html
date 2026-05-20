@@ -1,6 +1,6 @@
-<div class="modal-backdrop" role="presentation" (click)="closed.emit()">
+<div class="modal-backdrop" role="presentation" (click)="close()">
   <section class="modal" role="dialog" aria-modal="true" aria-labelledby="gift-title" (click)="$event.stopPropagation()">
-    <button class="icon-button" type="button" aria-label="Fechar" (click)="closed.emit()">x</button>
+    <button class="icon-button" type="button" aria-label="Fechar" (click)="close()">x</button>
     <img [src]="gift.image" [alt]="gift.name" />
 
     <div class="modal__content">
@@ -12,6 +12,10 @@
         <label>
           Seu nome
           <input type="text" name="contributorName" [(ngModel)]="contributor.name" placeholder="Nome completo" />
+        </label>
+        <label>
+          Email
+          <input type="email" name="contributorEmail" [(ngModel)]="contributor.email" placeholder="voce@email.com" />
         </label>
         <label>
           Celular
@@ -44,12 +48,12 @@
           <span>Total</span>
           <strong>{{ paymentAmount | currency:'BRL':'symbol':'1.2-2' }}</strong>
         </div>
-        <span class="payment-box__hint">Escolha como deseja pagar</span>
+        <span class="payment-box__hint">Escolha a forma de pagamento</span>
       </div>
 
       <div class="payment-methods" aria-label="Forma de pagamento">
         <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'pix' }" (click)="choosePaymentMethod('pix')">
-          PIX
+          Pix
         </button>
         <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'credit-card' }" (click)="choosePaymentMethod('credit-card')">
           Cartao de credito
@@ -59,39 +63,24 @@
         </button>
       </div>
 
-      @if (selectedPaymentMethod() === 'pix') {
-        <button type="button" [disabled]="isCreatingPayment()" (click)="startPayment()">
-          {{ isCreatingPayment() ? 'Gerando...' : 'Gerar PIX' }}
-        </button>
-      }
+      <button type="button" [disabled]="isCreatingPayment()" (click)="startPayment()">
+        {{ isCreatingPayment() ? 'Abrindo...' : 'Pagar presente' }}
+      </button>
 
       @if (paymentError()) {
         <p class="error">{{ paymentError() }}</p>
       }
 
-      @if (paymentValidationMessage() && paymentStatus() === 'idle') {
-        <p class="status-note">{{ paymentValidationMessage() }}</p>
-      }
-
-      @if (paymentStatus() !== 'idle') {
-        <div class="pix-panel">
-          <img [src]="qrCodeUrl" alt="QRCode Pix" />
-          <div>
-            <span>Pix Copia e Cola</span>
-            <strong>{{ currentPixCopyPaste }}</strong>
-            <button type="button" class="text-button" (click)="copyPixKey()">
-              {{ copiedPix() ? 'Pix copiado' : 'Copiar Pix Copia e Cola' }}
-            </button>
-          </div>
-        </div>
-
+      @if (paymentValidationMessage()) {
         <div class="auth-panel">
           <p>{{ paymentValidationMessage() }}</p>
-          <div class="auth-panel__actions">
-            <button type="button" [disabled]="isConfirmingPayment()" (click)="verifyPaymentNow()">
-              {{ isConfirmingPayment() ? 'Verificando...' : 'Verificar pagamento' }}
-            </button>
-          </div>
+          @if (payment()) {
+            <div class="auth-panel__actions">
+              <button type="button" [disabled]="isConfirmingPayment()" (click)="verifyPaymentNow()">
+                {{ isConfirmingPayment() ? 'Verificando...' : 'Verificar pagamento' }}
+              </button>
+            </div>
+          }
         </div>
       }
 
@@ -99,8 +88,8 @@
         <p class="success">Pagamento confirmado. Obrigado por fazer parte da nossa historia!</p>
       }
 
-      @if (paymentStatus() === 'failed') {
-        <p class="error">Pagamento recusado ou expirado.</p>
+      @if (paymentStatus() === 'failed' || paymentStatus() === 'cancelled' || paymentStatus() === 'expired' || paymentStatus() === 'refunded') {
+        <p class="error">Pagamento nao confirmado pelo Mercado Pago.</p>
       }
     </div>
   </section>
