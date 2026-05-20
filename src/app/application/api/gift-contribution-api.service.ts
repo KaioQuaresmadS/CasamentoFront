@@ -61,11 +61,15 @@ export interface CreateMercadoPagoPaymentResponse {
 
 export interface MercadoPagoPaymentStatusResponse {
   id: string;
-  giftContributionId: string;
-  paymentStatus: string;
-  mercadoPagoStatus: string;
-  paidAt: string | null;
-  updatedAt: string;
+  giftContributionId?: string;
+  status?: string;
+  paymentStatus?: string;
+  mercadoPagoStatus?: string;
+  data?: {
+    status?: string;
+  };
+  paidAt?: string | null;
+  updatedAt?: string;
 }
 
 @Injectable({ providedIn: 'root' })

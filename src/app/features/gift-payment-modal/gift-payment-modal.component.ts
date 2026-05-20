@@ -5,7 +5,8 @@ import { finalize, Subscription, switchMap, takeWhile, timer } from 'rxjs';
 import {
   CreateMercadoPagoPaymentResponse,
   GiftContributionApiService,
-  MercadoPagoPaymentMethod
+  MercadoPagoPaymentMethod,
+  MercadoPagoPaymentStatusResponse
 } from '../../application/api/gift-contribution-api.service';
 import { calculateGiftPayment, calculateQuotaValue } from '../../application/use-cases/calculate-gift-payment';
 import { Gift } from '../../domain/models/gift.model';
@@ -124,7 +125,7 @@ export class GiftPaymentModalComponent implements OnDestroy {
       .getMercadoPagoPaymentStatus(paymentId)
       .pipe(finalize(() => this.isConfirmingPayment.set(false)))
       .subscribe({
-        next: (response) => this.applyPaymentStatus(response.paymentStatus),
+        next: (response) => this.applyPaymentStatus(response),
         error: () => {
           this.paymentError.set('Nao foi possivel consultar a confirmacao do pagamento.');
         }
@@ -158,7 +159,7 @@ export class GiftPaymentModalComponent implements OnDestroy {
         switchMap(() => this.contributionApiService.getMercadoPagoPaymentStatus(paymentId))
       )
       .subscribe({
-        next: (response) => this.applyPaymentStatus(response.paymentStatus),
+        next: (response) => this.applyPaymentStatus(response),
         error: () => {
           this.paymentValidationMessage.set('Ainda nao foi possivel validar. Tentaremos novamente em alguns segundos.');
         },
@@ -170,22 +171,30 @@ export class GiftPaymentModalComponent implements OnDestroy {
       });
   }
 
-  private applyPaymentStatus(status: string): void {
-    const normalizedStatus = status.toLowerCase();
-    if (normalizedStatus === 'paid') {
+  private applyPaymentStatus(response: MercadoPagoPaymentStatusResponse | { status?: string; paymentStatus?: string; data?: { status?: string } } | null | undefined): void {
+    console.log('Mercado Pago payment status response:', response);
+
+    const rawStatus =
+      response?.status ??
+      response?.paymentStatus ??
+      response?.data?.status ??
+      'pending';
+    const normalizedStatus = String(rawStatus).toLowerCase();
+
+    if (normalizedStatus === 'approved' || normalizedStatus === 'paid' || normalizedStatus === 'confirmed') {
       this.paymentStatus.set('confirmed');
       this.paymentValidationMessage.set('Pagamento aprovado. Obrigado pelo presente!');
       this.stopPaymentStatusPolling();
       return;
     }
 
-    if (normalizedStatus === 'processing' || normalizedStatus === 'pending') {
+    if (normalizedStatus === 'processing' || normalizedStatus === 'pending' || normalizedStatus === 'in_process') {
       this.paymentStatus.set(normalizedStatus === 'processing' ? 'processing' : 'waiting');
       this.paymentValidationMessage.set('Aguardando confirmacao do pagamento pelo Mercado Pago.');
       return;
     }
 
-    if (normalizedStatus === 'cancelled') {
+    if (normalizedStatus === 'cancelled' || normalizedStatus === 'canceled') {
       this.paymentStatus.set('cancelled');
       this.paymentValidationMessage.set('Pagamento cancelado.');
       this.stopPaymentStatusPolling();
@@ -206,11 +215,15 @@ export class GiftPaymentModalComponent implements OnDestroy {
       return;
     }
 
-    if (normalizedStatus === 'failed') {
+    if (normalizedStatus === 'failed' || normalizedStatus === 'rejected') {
       this.paymentStatus.set('failed');
       this.paymentValidationMessage.set('Pagamento recusado.');
       this.stopPaymentStatusPolling();
+      return;
     }
+
+    this.paymentStatus.set('waiting');
+    this.paymentValidationMessage.set('Aguardando confirmacao do pagamento pelo Mercado Pago.');
   }
 
   private resetPayment(): void {
