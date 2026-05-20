@@ -35,14 +35,14 @@ export interface PaymentStatusResponse {
   paidAt: string | null;
 }
 
-export type MercadoPagoPaymentMethod = 'pix' | 'credit_card' | 'boleto';
+export type MercadoPagoPaymentMethod = 'pix' | 'credit_card' | 'boleto' | 'mercado_pago';
 
 export interface CreateMercadoPagoPaymentRequest {
   giftId: string;
   payerName: string;
   payerEmail: string;
   payerPhone: string;
-  paymentMethod: MercadoPagoPaymentMethod;
+  paymentMethod?: MercadoPagoPaymentMethod | null;
   mode: 'FullGift' | 'Quota';
   quotaQuantity: number;
 }

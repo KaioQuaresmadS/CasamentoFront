@@ -5,14 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import {
   CreateMercadoPagoPaymentResponse,
-  GiftContributionApiService,
-  MercadoPagoPaymentMethod
+  GiftContributionApiService
 } from '../../application/api/gift-contribution-api.service';
 import { calculateGiftPayment, calculateQuotaValue } from '../../application/use-cases/calculate-gift-payment';
 import { Gift } from '../../domain/models/gift.model';
 import { GiftPurchaseMode } from '../../domain/models/payment.model';
 
-type PaymentMethod = 'pix' | 'credit-card' | 'boleto';
 type PaymentResponse = CreateMercadoPagoPaymentResponse;
 
 @Component({
@@ -31,7 +29,6 @@ export class GiftPaymentModalComponent {
   readonly isCreatingPayment = signal(false);
   readonly paymentError = signal('');
   readonly paymentValidationMessage = signal('');
-  readonly selectedPaymentMethod = signal<PaymentMethod | null>(null);
   readonly payment = signal<CreateMercadoPagoPaymentResponse | null>(null);
   readonly contributor = {
     name: '',
@@ -59,19 +56,7 @@ export class GiftPaymentModalComponent {
     this.quotaQuantity.set(Number(input.value));
   }
 
-  choosePaymentMethod(method: PaymentMethod): void {
-    this.selectedPaymentMethod.set(method);
-    this.paymentError.set('');
-    this.paymentValidationMessage.set('O pagamento sera finalizado no ambiente seguro do Mercado Pago.');
-  }
-
   startPayment(): void {
-    const method = this.selectedPaymentMethod();
-    if (!method) {
-      this.paymentError.set('Escolha Pix, cartao de credito ou boleto.');
-      return;
-    }
-
     if (!this.contributor.name.trim() || !this.contributor.email.trim() || !this.contributor.phone.trim()) {
       this.paymentError.set('Informe seu nome, email e celular para iniciar o pagamento.');
       return;
@@ -87,7 +72,7 @@ export class GiftPaymentModalComponent {
         this.contributor.name,
         this.contributor.email,
         this.contributor.phone,
-        this.toApiPaymentMethod(method),
+        'mercado_pago',
         this.selectedMode(),
         this.quotaQuantity()
       )
@@ -120,7 +105,6 @@ export class GiftPaymentModalComponent {
   private resetPayment(): void {
     this.paymentValidationMessage.set('');
     this.payment.set(null);
-    this.selectedPaymentMethod.set(null);
     this.paymentError.set('');
   }
 
@@ -129,8 +113,7 @@ export class GiftPaymentModalComponent {
       'sandboxInitPoint',
       'sandbox_init_point',
       'initPoint',
-      'init_point',
-      'checkoutUrl'
+      'init_point'
     ]);
   }
 
@@ -163,9 +146,5 @@ export class GiftPaymentModalComponent {
     }
 
     return 'Nao foi possivel abrir o pagamento agora. Tente novamente em instantes.';
-  }
-
-  private toApiPaymentMethod(method: PaymentMethod): MercadoPagoPaymentMethod {
-    return method === 'credit-card' ? 'credit_card' : method;
   }
 }

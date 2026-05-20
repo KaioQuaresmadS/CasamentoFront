@@ -48,23 +48,11 @@
           <span>Total</span>
           <strong>{{ paymentAmount | currency:'BRL':'symbol':'1.2-2' }}</strong>
         </div>
-        <span class="payment-box__hint">Escolha a forma de pagamento</span>
-      </div>
-
-      <div class="payment-methods" aria-label="Forma de pagamento">
-        <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'pix' }" (click)="choosePaymentMethod('pix')">
-          Pix
-        </button>
-        <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'credit-card' }" (click)="choosePaymentMethod('credit-card')">
-          Cartao de credito
-        </button>
-        <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'boleto' }" (click)="choosePaymentMethod('boleto')">
-          Boleto
-        </button>
+        <span class="payment-box__hint">Voce sera redirecionado ao Mercado Pago para escolher Pix, cartao ou boleto.</span>
       </div>
 
       <button type="button" [disabled]="isCreatingPayment()" (click)="startPayment()">
-        {{ isCreatingPayment() ? 'Abrindo...' : 'Pagar presente' }}
+        {{ isCreatingPayment() ? 'Abrindo...' : 'Pagar com Mercado Pago' }}
       </button>
 
       @if (paymentError()) {

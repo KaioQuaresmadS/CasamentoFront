@@ -94,8 +94,7 @@ button:disabled {
 }
 
 button.secondary,
-.choice-group button,
-.payment-methods button {
+.choice-group button {
   color: #4b3b31;
   background: #efe5d9;
 }
@@ -120,17 +119,9 @@ button.secondary,
   margin: 22px 0;
 }
 
-.choice-group button.active,
-.payment-methods button.active {
+.choice-group button.active {
   color: #fffdf8;
   background: #7d4c32;
-}
-
-.payment-methods {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 14px 0;
 }
 
 .quota {
@@ -211,7 +202,6 @@ button.secondary,
   .modal,
   .payment-box,
   .choice-group,
-  .payment-methods,
   .contributor-grid {
     grid-template-columns: 1fr;
   }
