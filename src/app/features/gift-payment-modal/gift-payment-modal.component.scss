@@ -151,9 +151,7 @@ button.secondary,
   font-weight: 700;
 }
 
-.payment-box,
-.pix-panel,
-.auth-panel {
+.payment-box {
   display: grid;
   gap: 14px;
   margin-top: 16px;
@@ -172,8 +170,7 @@ button.secondary,
   font-weight: 800;
 }
 
-.payment-box span,
-.pix-panel span {
+.payment-box span {
   display: block;
   margin-bottom: 6px;
   color: #89786a;
@@ -184,57 +181,6 @@ button.secondary,
 .payment-box strong {
   color: #2f2924;
   font-size: 1.5rem;
-}
-
-.pix-panel {
-  grid-template-columns: auto 1fr;
-  align-items: center;
-}
-
-.pix-panel img {
-  width: 148px;
-  height: 148px;
-  border-radius: 6px;
-  background: #fff;
-}
-
-.text-button {
-  min-height: auto;
-  padding: 0;
-  color: #7d4c32;
-  background: transparent;
-  text-align: left;
-}
-
-.auth-panel__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.payment-copy {
-  display: grid;
-  gap: 10px;
-}
-
-.payment-copy span {
-  color: #89786a;
-  font-size: 0.86rem;
-  font-weight: 800;
-}
-
-code {
-  display: block;
-  max-width: 100%;
-  overflow-wrap: anywhere;
-  border: 1px solid #e1d4c8;
-  border-radius: 6px;
-  padding: 10px 12px;
-  color: #2f2924;
-  background: #fffdf9;
-  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
-  font-size: 0.85rem;
-  line-height: 1.5;
 }
 
 .success,
@@ -264,7 +210,6 @@ code {
 @media (max-width: 760px) {
   .modal,
   .payment-box,
-  .pix-panel,
   .choice-group,
   .payment-methods,
   .contributor-grid {
@@ -276,8 +221,4 @@ code {
     max-height: 260px;
   }
 
-  .pix-panel img {
-    width: 180px;
-    height: 180px;
-  }
 }

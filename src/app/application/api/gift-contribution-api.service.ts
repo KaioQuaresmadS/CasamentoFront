@@ -50,6 +50,8 @@ export interface CreateMercadoPagoPaymentRequest {
 export interface CreateMercadoPagoPaymentResponse {
   id: string;
   giftContributionId: string;
+  externalReference?: string;
+  external_reference?: string;
   status?: string;
   paymentStatus?: string;
   paymentMethod: MercadoPagoPaymentMethod;

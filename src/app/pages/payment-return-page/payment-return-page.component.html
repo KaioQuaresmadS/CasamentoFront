@@ -1,0 +1,41 @@
+<main class="payment-return">
+  <section class="payment-panel">
+    <p class="eyebrow">{{ content().eyebrow }}</p>
+    <h1>{{ content().title }}</h1>
+    <p>{{ content().description }}</p>
+
+    @if (paymentId()) {
+      <p class="reference">
+        <span>Pagamento</span>
+        <strong>{{ paymentId() }}</strong>
+      </p>
+    }
+
+    @if (externalReference()) {
+      <p class="reference">
+        <span>Referencia</span>
+        <strong>{{ externalReference() }}</strong>
+      </p>
+    }
+
+    @if (isLoading()) {
+      <p class="status-note">Consultando o status no backend...</p>
+    }
+
+    @if (statusMessage()) {
+      <p class="status-note">{{ statusMessage() }}</p>
+    }
+
+    @if (statusError()) {
+      <p class="error">{{ statusError() }}</p>
+    }
+
+    <p class="webhook-note">
+      A confirmacao definitiva depende do Mercado Pago e do webhook do backend. Se a tela ainda mostrar pendente, ela pode atualizar no sistema alguns minutos depois.
+    </p>
+
+    <div class="actions">
+      <a routerLink="/">Voltar para lista de presentes</a>
+    </div>
+  </section>
+</main>

@@ -72,64 +72,7 @@
       }
 
       @if (paymentValidationMessage()) {
-        <div class="auth-panel">
-          <p>{{ paymentValidationMessage() }}</p>
-
-          @if (paymentCheckoutUrl) {
-            <button type="button" (click)="openPaymentUrl()">
-              {{ paymentActionLabel }}
-            </button>
-          }
-
-          @if (paymentPixQrCodeImage) {
-            <div class="pix-panel">
-              <img [src]="paymentPixQrCodeImage" alt="QR Code Pix" />
-              <div>
-                <span>Pix copia e cola</span>
-                @if (paymentPixCode) {
-                  <code>{{ paymentPixCode }}</code>
-                  <button class="text-button" type="button" (click)="copyPaymentText(paymentPixCode)">
-                    Copiar codigo Pix
-                  </button>
-                }
-              </div>
-            </div>
-          } @else if (paymentPixCode) {
-            <div class="payment-copy">
-              <span>Pix copia e cola</span>
-              <code>{{ paymentPixCode }}</code>
-              <button class="text-button" type="button" (click)="copyPaymentText(paymentPixCode)">
-                Copiar codigo Pix
-              </button>
-            </div>
-          }
-
-          @if (boletoLine) {
-            <div class="payment-copy">
-              <span>Linha digitavel</span>
-              <code>{{ boletoLine }}</code>
-              <button class="text-button" type="button" (click)="copyPaymentText(boletoLine)">
-                Copiar linha digitavel
-              </button>
-            </div>
-          }
-
-          @if (payment()) {
-            <div class="auth-panel__actions">
-              <button type="button" [disabled]="isConfirmingPayment()" (click)="verifyPaymentNow()">
-                {{ isConfirmingPayment() ? 'Verificando...' : 'Verificar pagamento' }}
-              </button>
-            </div>
-          }
-        </div>
-      }
-
-      @if (paymentStatus() === 'confirmed') {
-        <p class="success">Pagamento confirmado. Obrigado por fazer parte da nossa historia!</p>
-      }
-
-      @if (paymentStatus() === 'failed' || paymentStatus() === 'cancelled' || paymentStatus() === 'expired' || paymentStatus() === 'refunded') {
-        <p class="error">Pagamento nao confirmado pelo Mercado Pago.</p>
+        <p class="status-note">{{ paymentValidationMessage() }}</p>
       }
     </div>
   </section>
