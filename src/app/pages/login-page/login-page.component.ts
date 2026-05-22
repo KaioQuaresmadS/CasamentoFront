@@ -19,8 +19,8 @@ export class LoginPageComponent {
   protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly form = this.formBuilder.nonNullable.group({
-    email: ['admin@casamento.local', [Validators.required, Validators.email]],
-    password: ['Admin@123456', [Validators.required, Validators.minLength(8)]]
+    email: ['', [Validators.required]],
+    password: ['', [Validators.required]]
   });
 
   protected submit(): void {
@@ -37,7 +37,7 @@ export class LoginPageComponent {
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: () => void this.router.navigateByUrl('/admin'),
-        error: () => this.errorMessage.set('Email ou senha invalidos.')
+        error: () => this.errorMessage.set('Login ou senha invalidos.')
       });
   }
 }
