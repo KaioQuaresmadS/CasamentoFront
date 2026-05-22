@@ -1,9 +1,9 @@
+@use "../../../SCSS/variables" as *;
+@use "../../../SCSS/mixins" as *;
+
 :host {
   display: block;
-  min-height: 100vh;
-  color: #2f2924;
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
-  background: #fbfaf7;
+  @include page-shell;
 }
 
 main {
@@ -16,12 +16,12 @@ main {
   bottom: 16px;
   z-index: 20;
   padding: 10px 14px;
-  border: 1px solid rgb(80 63 50 / 18%);
+  border: 1px solid $color-border;
   border-radius: 6px;
-  background: rgb(255 253 249 / 92%);
-  color: #5f4637;
+  background: rgba($color-white, 0.92);
+  color: $color-olive-dark;
   font-size: 0.85rem;
   font-weight: 800;
   text-decoration: none;
-  box-shadow: 0 10px 30px rgb(53 38 27 / 12%);
+  box-shadow: 0 10px 30px $color-shadow;
 }

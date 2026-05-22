@@ -84,7 +84,10 @@ export class PaymentReturnPageComponent implements OnInit {
       .getMercadoPagoPaymentStatus(paymentId)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
-        next: (response) => this.statusMessage.set(this.buildStatusMessage(response)),
+        next: (response) => {
+          this.persistConfirmedGiftPayment(response);
+          this.statusMessage.set(this.buildStatusMessage(response));
+        },
         error: () => {
           this.statusError.set('Nao conseguimos consultar o status agora. A confirmacao final ainda vem pelo webhook do Mercado Pago.');
         }
@@ -94,7 +97,7 @@ export class PaymentReturnPageComponent implements OnInit {
   private buildStatusMessage(response: MercadoPagoPaymentStatusResponse): string {
     const status = this.normalizeStatus(response);
 
-    if (status === 'approved' || status === 'paid' || status === 'confirmed') {
+    if (this.isConfirmedStatus(status)) {
       return 'Pagamento confirmado. Obrigado pelo presente!';
     }
 
@@ -112,5 +115,48 @@ export class PaymentReturnPageComponent implements OnInit {
   private normalizeStatus(response: MercadoPagoPaymentStatusResponse): string {
     const rawStatus = response.status ?? response.paymentStatus ?? response.mercadoPagoStatus ?? response.data?.status ?? '';
     return String(rawStatus).toLowerCase();
+  }
+
+  private persistConfirmedGiftPayment(response: MercadoPagoPaymentStatusResponse): void {
+    const status = this.normalizeStatus(response);
+    if (!this.isConfirmedStatus(status)) {
+      return;
+    }
+
+    const pendingPayment = localStorage.getItem('pendingGiftPayment');
+    if (!pendingPayment) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(pendingPayment) as {
+        paymentId?: string;
+        giftId?: string;
+        mode?: string;
+        amount?: number;
+      };
+
+      if (!parsed.giftId || parsed.paymentId !== this.paymentId()) {
+        return;
+      }
+
+      localStorage.setItem(
+        'confirmedGiftPayment',
+        JSON.stringify({
+          paymentId: parsed.paymentId,
+          giftId: parsed.giftId,
+          mode: parsed.mode,
+          amount: parsed.amount ?? 0,
+          confirmedAt: response.paidAt ?? new Date().toISOString()
+        })
+      );
+      localStorage.removeItem('pendingGiftPayment');
+    } catch {
+      localStorage.removeItem('pendingGiftPayment');
+    }
+  }
+
+  private isConfirmedStatus(status: string): boolean {
+    return ['approved', 'paid', 'confirmed', 'completed'].includes(status);
   }
 }

@@ -1,0 +1,26 @@
+$color-white: #fffdf6;
+$color-paper: #fbf7ee;
+$color-cream: #f4efe4;
+$color-olive: #687052;
+$color-olive-dark: #4f573d;
+$color-olive-soft: #dfe3d2;
+$color-rose: #d98f92;
+$color-rose-dark: #b9787b;
+$color-rose-soft: #f2d6d6;
+$color-error: #842c2c;
+$color-ink: #34382a;
+$color-muted: #6d725b;
+$color-border: rgba($color-olive-dark, 0.28);
+$color-shadow: rgba(66, 69, 49, 0.13);
+
+$font-serif: Georgia, "Times New Roman", serif;
+$font-sans: Inter, "Segoe UI", Arial, sans-serif;
+$font-script: "Brush Script MT", "Segoe Script", cursive;
+
+$radius-sm: 6px;
+$radius-md: 8px;
+$radius-pill: 999px;
+
+$space-page: clamp(18px, 6vw, 72px);
+$section-y: clamp(56px, 8vw, 104px);
+$content-max: 1120px;

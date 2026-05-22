@@ -40,7 +40,7 @@ export class WeddingPageComponent implements OnInit {
           return of(GIFTS);
         })
       )
-      .subscribe((gifts) => this.gifts.set(gifts));
+      .subscribe((gifts) => this.gifts.set(this.applyConfirmedPayment(gifts)));
   }
 
   protected chooseGift(gift: Gift): void {
@@ -49,5 +49,46 @@ export class WeddingPageComponent implements OnInit {
 
   protected closeGift(): void {
     this.selectedGift.set(null);
+  }
+
+  private applyConfirmedPayment(gifts: Gift[]): Gift[] {
+    const confirmedPayment = localStorage.getItem('confirmedGiftPayment');
+    if (!confirmedPayment) {
+      return gifts;
+    }
+
+    try {
+      const parsed = JSON.parse(confirmedPayment) as {
+        giftId?: string;
+        mode?: string;
+        amount?: number;
+      };
+
+      if (!parsed.giftId) {
+        return gifts;
+      }
+
+      return gifts.map((gift) => {
+        if (gift.id !== parsed.giftId) {
+          return gift;
+        }
+
+        const confirmedAmount = Math.min(
+          gift.price,
+          Math.max(gift.confirmedAmount ?? 0, parsed.amount ?? 0)
+        );
+
+        return {
+          ...gift,
+          confirmedAmount,
+          reservedPercent: gift.price > 0 ? (confirmedAmount / gift.price) * 100 : gift.reservedPercent,
+          isPurchased: gift.isPurchased || parsed.mode === 'full' || confirmedAmount >= gift.price,
+          paymentStatus: 'confirmed'
+        };
+      });
+    } catch {
+      localStorage.removeItem('confirmedGiftPayment');
+      return gifts;
+    }
   }
 }

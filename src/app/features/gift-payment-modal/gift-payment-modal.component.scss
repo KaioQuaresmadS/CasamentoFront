@@ -1,3 +1,6 @@
+@use "../../../SCSS/variables" as *;
+@use "../../../SCSS/mixins" as *;
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -5,18 +8,18 @@
   display: grid;
   place-items: center;
   padding: 18px;
-  background: rgba(31, 26, 22, 0.58);
+  background: rgba($color-ink, 0.58);
 }
 
 .modal {
+  @include card;
+
   position: relative;
   display: grid;
   grid-template-columns: minmax(240px, 0.85fr) minmax(320px, 1.15fr);
   width: min(980px, 100%);
   max-height: min(860px, 92vh);
   overflow: auto;
-  border-radius: 8px;
-  background: #fffdf9;
 }
 
 .modal > img {
@@ -31,42 +34,19 @@
 }
 
 .eyebrow {
-  margin: 0 0 12px;
-  color: #9c6f49;
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
+  @include eyebrow;
 }
 
 h2 {
-  margin: 0;
-  color: #3a302a;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  font-weight: 500;
-  line-height: 1;
+  @include heading;
 }
 
 p {
-  color: #6b6158;
-  line-height: 1.7;
+  @include body-copy;
 }
 
 button {
-  min-height: 44px;
-  border: 0;
-  border-radius: 6px;
-  padding: 12px 18px;
-  color: #fffdf8;
-  background: #7d4c32;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 800;
-}
-
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
+  @include button-primary;
 }
 
 .contributor-grid {
@@ -79,24 +59,17 @@ button:disabled {
 .contributor-grid label {
   display: grid;
   gap: 8px;
-  color: #3f352e;
+  color: $color-olive-dark;
   font-weight: 800;
 }
 
 .contributor-grid input {
-  width: 100%;
-  border: 1px solid #d9cbbd;
-  border-radius: 6px;
-  padding: 13px 14px;
-  color: #2f2924;
-  background: #fffdf9;
-  font: inherit;
+  @include input;
 }
 
 button.secondary,
 .choice-group button {
-  color: #4b3b31;
-  background: #efe5d9;
+  @include button-secondary;
 }
 
 .icon-button {
@@ -106,8 +79,8 @@ button.secondary,
   width: 44px;
   height: 44px;
   padding: 0;
-  color: #46382f;
-  background: rgba(255, 253, 249, 0.9);
+  color: $color-olive-dark;
+  background: rgba($color-white, 0.9);
   font-size: 1.4rem;
   line-height: 1;
 }
@@ -120,25 +93,25 @@ button.secondary,
 }
 
 .choice-group button.active {
-  color: #fffdf8;
-  background: #7d4c32;
+  color: $color-white;
+  background: $color-olive;
 }
 
 .quota {
   display: grid;
   gap: 8px;
   margin-bottom: 18px;
-  color: #3f352e;
+  color: $color-olive-dark;
   font-weight: 800;
 }
 
 .quota input {
   padding: 0;
-  accent-color: #7d4c32;
+  accent-color: $color-olive;
 }
 
 .quota span {
-  color: #6b6158;
+  color: $color-muted;
   font-weight: 700;
 }
 
@@ -148,7 +121,7 @@ button.secondary,
   margin-top: 16px;
   padding: 16px;
   border-radius: 8px;
-  background: #f6f0ea;
+  background: $color-cream;
 }
 
 .payment-box {
@@ -157,20 +130,20 @@ button.secondary,
 }
 
 .payment-box__hint {
-  color: #89786a;
+  color: $color-muted;
   font-weight: 800;
 }
 
 .payment-box span {
   display: block;
   margin-bottom: 6px;
-  color: #89786a;
+  color: $color-muted;
   font-size: 0.86rem;
   font-weight: 800;
 }
 
 .payment-box strong {
-  color: #2f2924;
+  color: $color-ink;
   font-size: 1.5rem;
 }
 
@@ -184,18 +157,18 @@ button.secondary,
 }
 
 .success {
-  color: #28533a;
-  background: #e8f4ec;
+  color: $color-olive-dark;
+  background: $color-olive-soft;
 }
 
 .error {
-  color: #842c2c;
-  background: #fae8e6;
+  color: $color-error;
+  background: $color-rose-soft;
 }
 
 .status-note {
-  color: #5e4a36;
-  background: #f5eadb;
+  color: $color-olive-dark;
+  background: $color-rose-soft;
 }
 
 @media (max-width: 760px) {

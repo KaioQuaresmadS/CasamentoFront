@@ -27,4 +27,10 @@ export class RsvpApiService {
 
     return this.http.post(`${API_BASE_URL}/guest-confirmations`, request);
   }
+
+  exportGuests(): Observable<Blob> {
+    return this.http.get(`${API_BASE_URL}/guests/export`, {
+      responseType: 'blob'
+    });
+  }
 }

@@ -1,0 +1,19 @@
+@use "variables" as *;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: $color-paper;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  color: $color-white;
+  background: $color-rose-dark;
+}

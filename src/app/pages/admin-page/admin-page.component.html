@@ -4,7 +4,7 @@
     <button type="button" (click)="logout()">Sair</button>
   </header>
 
-  <section>
+  <section class="intro">
     <p class="eyebrow">Area administrativa</p>
     <h1>Casamento Ana & Kaio</h1>
 
@@ -13,9 +13,133 @@
     }
 
     <div class="actions">
-      <a href="/api/gifts">Presentes</a>
-      <a href="/api/guest-confirmations">Confirmacoes</a>
-      <a href="/api/admin/me">Validar JWT</a>
+      <button type="button" (click)="newGift()">Novo presente</button>
+      <button type="button" (click)="loadGifts()" [disabled]="isLoading()">Atualizar presentes</button>
+      <button type="button" (click)="exportGuests()" [disabled]="isExporting()">
+        {{ isExporting() ? 'Exportando...' : 'Exportar convidados' }}
+      </button>
+    </div>
+  </section>
+
+  @if (errorMessage()) {
+    <p class="feedback error">{{ errorMessage() }}</p>
+  }
+
+  @if (successMessage()) {
+    <p class="feedback success">{{ successMessage() }}</p>
+  }
+
+  <section class="admin-grid">
+    <form class="gift-form" (ngSubmit)="saveGift()">
+      <div class="section-heading">
+        <p class="eyebrow">Presentes</p>
+        <h2>{{ isEditing() ? 'Editar presente' : 'Cadastrar presente' }}</h2>
+      </div>
+
+      <label>
+        Nome
+        <input
+          type="text"
+          name="name"
+          required
+          [ngModel]="form().name"
+          (ngModelChange)="updateForm('name', $event)"
+        />
+      </label>
+
+      <label>
+        Descricao
+        <textarea
+          name="description"
+          rows="4"
+          required
+          [ngModel]="form().description"
+          (ngModelChange)="updateForm('description', $event)"
+        ></textarea>
+      </label>
+
+      <label>
+        URL da imagem
+        <input
+          type="url"
+          name="imageUrl"
+          required
+          [ngModel]="form().imageUrl"
+          (ngModelChange)="updateForm('imageUrl', $event)"
+        />
+      </label>
+
+      <div class="form-row">
+        <label>
+          Preco
+          <input
+            type="number"
+            name="price"
+            min="0.01"
+            step="0.01"
+            required
+            [ngModel]="form().price"
+            (ngModelChange)="updateForm('price', $event)"
+          />
+        </label>
+
+        <label>
+          Reservado (%)
+          <input
+            type="number"
+            name="reservedPercent"
+            min="0"
+            max="100"
+            step="1"
+            required
+            [ngModel]="form().reservedPercent"
+            (ngModelChange)="updateForm('reservedPercent', $event)"
+          />
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Salvando...' : isEditing() ? 'Salvar alteracoes' : 'Criar presente' }}
+        </button>
+
+        @if (isEditing()) {
+          <button type="button" class="secondary" (click)="newGift()">Cancelar</button>
+        }
+      </div>
+    </form>
+
+    <div class="gift-list-panel">
+      <div class="section-heading">
+        <p class="eyebrow">Lista publica</p>
+        <h2>Presentes ativos</h2>
+      </div>
+
+      @if (isLoading()) {
+        <p class="muted">Carregando presentes...</p>
+      } @else if (!gifts().length) {
+        <p class="muted">Nenhum presente cadastrado.</p>
+      } @else {
+        <div class="gift-table">
+          @for (gift of gifts(); track gift.id) {
+            <article class="gift-row">
+              <img [src]="gift.image" [alt]="gift.name" />
+
+              <div>
+                <strong>{{ gift.name }}</strong>
+                <span>{{ gift.price | currency: 'BRL' }} · {{ gift.reservedPercent }}% reservado</span>
+              </div>
+
+              <div class="row-actions">
+                <button type="button" class="secondary" (click)="editGift(gift)">Editar</button>
+                <button type="button" class="danger" (click)="removeGift(gift)">Remover</button>
+              </div>
+            </article>
+          }
+        </div>
+      }
+
+      <p class="export-note">Arquivo esperado: convidados_{{ today | date: 'yyyyMMdd' }}.xlsx</p>
     </div>
   </section>
 </main>

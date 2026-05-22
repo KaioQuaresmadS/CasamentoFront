@@ -1,0 +1,15 @@
+@use "variables" as *;
+
+.section {
+  padding: $section-y $space-page;
+}
+
+.section__inner {
+  width: min($content-max, 100%);
+  margin-inline: auto;
+}
+
+.section__intro {
+  width: min(760px, 100%);
+  margin-bottom: 32px;
+}

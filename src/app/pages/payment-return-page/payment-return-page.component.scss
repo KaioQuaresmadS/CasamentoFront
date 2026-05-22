@@ -1,42 +1,33 @@
+@use "../../../SCSS/variables" as *;
+@use "../../../SCSS/mixins" as *;
+
 .payment-return {
-  min-height: 100vh;
+  @include page-shell;
+
   display: grid;
   place-items: center;
   padding: 24px;
-  color: #2f2924;
-  background: #f7f3ee;
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
 }
 
 .payment-panel {
+  @include card;
+
   width: min(100%, 680px);
   padding: clamp(24px, 5vw, 44px);
-  border: 1px solid #e0d5ca;
-  border-radius: 8px;
-  background: #fffdf9;
-  box-shadow: 0 18px 55px rgba(63, 48, 36, 0.12);
 }
 
 .eyebrow {
-  margin: 0 0 12px;
-  color: #9c6f49;
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
+  @include eyebrow;
 }
 
 h1 {
-  margin: 0 0 16px;
-  color: #3a302a;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.2rem, 7vw, 4.4rem);
-  font-weight: 500;
-  line-height: 1;
+  @include heading(4.4rem);
+
+  margin-bottom: 16px;
 }
 
 p {
-  color: #6b6158;
-  line-height: 1.7;
+  @include body-copy;
 }
 
 .reference,
@@ -51,11 +42,11 @@ p {
 .reference {
   display: grid;
   gap: 4px;
-  background: #f6f0ea;
+  background: $color-cream;
 }
 
 .reference span {
-  color: #89786a;
+  color: $color-muted;
   font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -63,24 +54,24 @@ p {
 
 .reference strong {
   overflow-wrap: anywhere;
-  color: #2f2924;
+  color: $color-ink;
 }
 
 .status-note {
-  color: #5e4a36;
-  background: #f5eadb;
+  color: $color-olive-dark;
+  background: $color-olive-soft;
   font-weight: 800;
 }
 
 .error {
-  color: #842c2c;
-  background: #fae8e6;
+  color: $color-error;
+  background: $color-rose-soft;
   font-weight: 800;
 }
 
 .webhook-note {
-  color: #6b6158;
-  background: #fbf7f1;
+  color: $color-muted;
+  background: $color-paper;
 }
 
 .actions {
@@ -91,14 +82,10 @@ p {
 }
 
 a {
+  @include button-primary;
+
   min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  padding: 12px 18px;
-  color: #fffdf8;
-  background: #7d4c32;
-  font-weight: 800;
-  text-decoration: none;
 }

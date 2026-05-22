@@ -6,6 +6,11 @@ export const WEDDING_INFO: WeddingInfo = {
   date: '10 de Outubro de 2026',
   eventCards: [
     {
+      label: 'Data',
+      title: '10 de Outubro de 2026',
+      description: 'Guarde esse dia com carinho para celebrar com a gente.'
+    },
+    {
       label: 'Local',
       title: 'Espaço de Eventos',
       description: 'Rua das Flores, 123 - Cidade/UF'
@@ -30,6 +35,7 @@ export const GIFTS: Gift[] = [
     description: 'Para começar a casa nova com refeições bem cuidadas.',
     price: 420,
     image: 'https://images.unsplash.com/photo-1584990347449-ae6e1f0da4a9?auto=format&fit=crop&w=900&q=80',
+    confirmedAmount: 147,
     reservedPercent: 35
   },
   {
@@ -38,6 +44,7 @@ export const GIFTS: Gift[] = [
     description: 'Uma lembrança para nosso primeiro jantar depois do casamento.',
     price: 280,
     image: 'https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&w=900&q=80',
+    confirmedAmount: 168,
     reservedPercent: 60
   },
   {
@@ -46,6 +53,7 @@ export const GIFTS: Gift[] = [
     description: 'Ajude com uma parte da nossa viagem e dos passeios.',
     price: 900,
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
+    confirmedAmount: 180,
     reservedPercent: 20
   },
   {
@@ -54,6 +62,7 @@ export const GIFTS: Gift[] = [
     description: 'Para os cafés da manhã e visitas na casa nova.',
     price: 360,
     image: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=900&q=80',
+    confirmedAmount: 162,
     reservedPercent: 45
   }
 ];

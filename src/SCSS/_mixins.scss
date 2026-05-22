@@ -1,0 +1,132 @@
+@use "variables" as *;
+
+@mixin page-shell {
+  min-height: 100vh;
+  color: $color-ink;
+  font-family: $font-sans;
+  background:
+    radial-gradient(circle at top left, rgba($color-rose, 0.16), transparent 30rem),
+    linear-gradient(180deg, $color-white 0%, $color-paper 100%);
+}
+
+@mixin section {
+  padding: $section-y $space-page;
+}
+
+@mixin section-inner {
+  width: min($content-max, 100%);
+  margin-inline: auto;
+}
+
+@mixin eyebrow {
+  margin: 0 0 12px;
+  color: $color-rose-dark;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@mixin heading($max: 3.8rem) {
+  margin: 0;
+  color: $color-olive-dark;
+  font-family: $font-serif;
+  font-size: clamp(2rem, 5vw, $max);
+  font-weight: 500;
+  line-height: 1;
+}
+
+@mixin body-copy {
+  color: $color-muted;
+  line-height: 1.7;
+}
+
+@mixin card {
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: rgba($color-white, 0.92);
+  box-shadow: 0 18px 52px $color-shadow;
+}
+
+@mixin button-primary {
+  min-height: 44px;
+  border: 0;
+  border-radius: $radius-sm;
+  padding: 12px 18px;
+  color: $color-white;
+  background: $color-olive;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover:not(:disabled) {
+    background: $color-olive-dark;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba($color-olive-dark, 0.18);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+@mixin button-secondary {
+  color: $color-olive-dark;
+  background: $color-rose-soft;
+}
+
+@mixin input {
+  width: 100%;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: 13px 14px;
+  color: $color-ink;
+  background: $color-white;
+  font: inherit;
+  outline: none;
+
+  &:focus {
+    border-color: $color-rose;
+    box-shadow: 0 0 0 3px rgba($color-rose, 0.2);
+  }
+}
+
+@mixin floral-corners {
+  position: relative;
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    width: clamp(160px, 28vw, 360px);
+    aspect-ratio: 1;
+    pointer-events: none;
+    opacity: 0.56;
+    background:
+      radial-gradient(circle at 35% 72%, rgba($color-rose, 0.7) 0 10%, transparent 11%),
+      radial-gradient(ellipse at 58% 28%, rgba($color-olive, 0.55) 0 9%, transparent 10%),
+      radial-gradient(ellipse at 42% 38%, rgba($color-olive, 0.45) 0 8%, transparent 9%),
+      radial-gradient(ellipse at 64% 52%, rgba($color-olive, 0.42) 0 8%, transparent 9%),
+      radial-gradient(ellipse at 26% 48%, rgba($color-olive, 0.34) 0 7%, transparent 8%);
+    filter: blur(0.2px);
+  }
+
+  &::before {
+    left: -72px;
+    bottom: -72px;
+  }
+
+  &::after {
+    top: -86px;
+    right: -72px;
+    transform: rotate(180deg);
+  }
+}

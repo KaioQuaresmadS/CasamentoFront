@@ -1,56 +1,36 @@
+@use "../../../SCSS/variables" as *;
+@use "../../../SCSS/mixins" as *;
+
 .section {
-  padding: clamp(56px, 8vw, 104px) clamp(18px, 6vw, 72px);
+  @include section;
 }
 
 .event-info {
-  background: #fffdf9;
+  background: $color-white;
+}
+
+.event-info__content {
+  width: min(900px, 100%);
+  margin-inline: auto;
+  text-align: center;
 }
 
 .eyebrow {
-  margin: 0 0 12px;
-  color: #9c6f49;
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
+  @include eyebrow;
 }
 
 h2 {
-  margin: 0;
-  color: #3a302a;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  font-weight: 500;
-  line-height: 1;
+  @include heading;
 }
 
 p {
-  color: #6b6158;
-  line-height: 1.7;
+  @include body-copy;
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-top: 28px;
-}
-
-.info-grid article {
-  border-left: 4px solid #a26c45;
-  padding: 8px 0 8px 18px;
-}
-
-.info-grid span {
-  display: block;
-  margin-bottom: 6px;
-  color: #89786a;
-  font-size: 0.86rem;
-  font-weight: 800;
-}
-
-.info-grid strong {
-  display: block;
-  margin-bottom: 8px;
-  color: #3a302a;
-  font-size: 1.2rem;
+.event-summary {
+  margin: 22px auto 0;
+  color: $color-olive-dark;
+  font-family: $font-serif;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  line-height: 1.45;
 }

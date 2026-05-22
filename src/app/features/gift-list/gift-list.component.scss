@@ -1,42 +1,37 @@
+@use "../../../SCSS/variables" as *;
+@use "../../../SCSS/mixins" as *;
+
 .section {
-  padding: clamp(56px, 8vw, 104px) clamp(18px, 6vw, 72px);
+  @include section;
 }
 
 .gifts {
-  background: #f3eee8;
+  background: $color-cream;
 }
 
 .section__intro {
   width: min(760px, 100%);
+  margin-inline: auto;
   margin-bottom: 32px;
+  text-align: center;
 }
 
 .eyebrow {
-  margin: 0 0 12px;
-  color: #9c6f49;
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
+  @include eyebrow;
 }
 
 h2 {
-  margin: 0;
-  color: #3a302a;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  font-weight: 500;
-  line-height: 1;
+  @include heading;
 }
 
 h3 {
   margin: 0 0 8px;
-  color: #3a302a;
+  color: $color-olive-dark;
   font-size: 1.1rem;
 }
 
 p {
-  color: #6b6158;
-  line-height: 1.7;
+  @include body-copy;
 }
 
 .gift-grid {
@@ -46,10 +41,10 @@ p {
 }
 
 .gift-card {
+  @include card;
+
   overflow: hidden;
-  border: 1px solid #e2d5c8;
-  border-radius: 8px;
-  background: #fffdf9;
+  position: relative;
 }
 
 .gift-card img {
@@ -57,10 +52,24 @@ p {
   aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
+  transition: filter 160ms ease;
 }
 
 .gift-card__body {
   padding: 18px;
+  text-align: center;
+}
+
+.gift-card__badge {
+  display: inline-flex;
+  margin-bottom: 10px;
+  border-radius: $radius-pill;
+  padding: 6px 10px;
+  color: $color-white;
+  background: $color-muted;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .progress {
@@ -68,36 +77,49 @@ p {
   overflow: hidden;
   margin: 18px 0;
   border-radius: 999px;
-  background: #eadfd4;
+  background: $color-olive-soft;
 }
 
 .progress span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: #a26c45;
+  background: $color-rose;
+}
+
+.gift-card__progress {
+  margin: -6px 0 18px;
+  color: $color-muted;
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
 .gift-card__footer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 12px;
 }
 
 .gift-card__footer strong {
-  color: #4a382c;
+  color: $color-olive-dark;
 }
 
 button {
-  min-height: 44px;
-  border: 0;
-  border-radius: 6px;
-  padding: 12px 18px;
-  color: #fffdf8;
-  background: #7d4c32;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 800;
+  @include button-primary;
+}
+
+.gift-card--purchased {
+  color: $color-muted;
+  background: $color-olive-soft;
+}
+
+.gift-card--purchased img {
+  filter: grayscale(1) opacity(0.72);
+}
+
+.gift-card--purchased .progress span,
+.gift-card--purchased button {
+  background: $color-muted;
 }

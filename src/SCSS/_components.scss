@@ -1,0 +1,17 @@
+@use "variables" as *;
+
+.palette-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: $color-rose;
+
+  &::before,
+  &::after {
+    content: "";
+    width: min(112px, 22vw);
+    height: 1px;
+    background: $color-border;
+  }
+}

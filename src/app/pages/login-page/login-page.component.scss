@@ -1,30 +1,30 @@
+@use "../../../SCSS/variables" as *;
+@use "../../../SCSS/mixins" as *;
+
 .login-page {
-  min-height: 100vh;
+  @include page-shell;
+
   display: grid;
   place-items: center;
   padding: 24px;
-  background: #f7f3ee;
-  font-family: Inter, system-ui, sans-serif;
 }
 
 .login-panel {
+  @include card;
+
   width: min(100%, 420px);
   padding: 28px;
-  border: 1px solid #e0d5ca;
-  border-radius: 8px;
-  background: #fffdf9;
-  box-shadow: 0 18px 55px rgb(63 48 36 / 12%);
 }
 
 .back-link {
-  color: #87664f;
+  color: $color-olive;
   font-size: 0.9rem;
   text-decoration: none;
 }
 
 h1 {
   margin: 18px 0 24px;
-  color: #3c2d24;
+  color: $color-olive-dark;
   font-size: 1.8rem;
 }
 
@@ -39,39 +39,24 @@ form {
 }
 
 label {
-  color: #4a392f;
+  color: $color-olive-dark;
   font-weight: 700;
 }
 
 input {
-  width: 100%;
+  @include input;
+
   min-height: 46px;
-  border: 1px solid #cdbfb4;
-  border-radius: 6px;
-  padding: 0 14px;
-  color: #332720;
-  font: inherit;
-  background: #fff;
 }
 
 button {
-  min-height: 48px;
-  border: 0;
-  border-radius: 6px;
-  background: #6f4f3b;
-  color: #fff;
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
-}
+  @include button-primary;
 
-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+  min-height: 48px;
 }
 
 .error {
   margin: 0;
-  color: #a93f3f;
+  color: $color-error;
   font-weight: 700;
 }

@@ -87,6 +87,7 @@ export class GiftPaymentModalComponent {
           }
 
           this.persistPaymentReference(response);
+          this.persistPendingGiftPayment(response);
           this.paymentValidationMessage.set('Finalize o pagamento no Mercado Pago. Depois voltaremos a verificar automaticamente.');
           window.location.href = checkoutUrl;
         },
@@ -122,6 +123,18 @@ export class GiftPaymentModalComponent {
     if (externalReference) {
       localStorage.setItem('externalReference', externalReference);
     }
+  }
+
+  private persistPendingGiftPayment(response: PaymentResponse): void {
+    localStorage.setItem(
+      'pendingGiftPayment',
+      JSON.stringify({
+        paymentId: response.id,
+        giftId: this.gift.id,
+        mode: this.selectedMode(),
+        amount: this.paymentAmount
+      })
+    );
   }
 
   private pickString(response: object, keys: string[]): string {

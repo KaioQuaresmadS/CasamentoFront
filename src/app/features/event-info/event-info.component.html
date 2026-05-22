@@ -1,15 +1,7 @@
 <section class="section event-info" id="informacoes">
-  <div>
+  <div class="event-info__content">
     <p class="eyebrow">Informações</p>
-    <h2>Local, horário e detalhes</h2>
-  </div>
-  <div class="info-grid">
-    @for (card of eventCards; track card.label) {
-      <article>
-        <span>{{ card.label }}</span>
-        <strong>{{ card.title }}</strong>
-        <p>{{ card.description }}</p>
-      </article>
-    }
+    <h2>Antes de confirmar</h2>
+    <p class="event-summary">{{ eventSummary() }}</p>
   </div>
 </section>
