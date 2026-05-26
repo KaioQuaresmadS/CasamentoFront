@@ -19,7 +19,7 @@ export class RsvpFormComponent {
 
   protected readonly attendanceForm: AttendanceForm = {
     fullName: '',
-    guests: 0,
+    companions: 0,
     phone: '',
     attendance: '',
     notes: ''
@@ -36,5 +36,13 @@ export class RsvpFormComponent {
         next: () => this.rsvpSent.set(true),
         error: () => this.submitError.set('Nao foi possivel salvar sua confirmacao agora. Confira se o backend esta rodando.')
       });
+  }
+
+  protected updateAttendance(attendance: AttendanceForm['attendance']): void {
+    this.attendanceForm.attendance = attendance;
+
+    if (attendance === 'nao') {
+      this.attendanceForm.companions = 0;
+    }
   }
 }

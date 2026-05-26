@@ -15,8 +15,16 @@
     </label>
 
     <label>
-      Acompanhantes
-      <input type="number" name="guests" [(ngModel)]="attendanceForm.guests" min="0" max="10" />
+      Nº de acompanhantes
+      <input
+        type="number"
+        name="companions"
+        [(ngModel)]="attendanceForm.companions"
+        min="0"
+        max="10"
+        [disabled]="attendanceForm.attendance === 'nao'"
+      />
+      <span class="field-note">Sem contar você.</span>
     </label>
 
     <label>
@@ -27,11 +35,25 @@
     <fieldset>
       <legend>Você irá ao casamento?</legend>
       <label class="radio">
-        <input type="radio" name="attendance" [(ngModel)]="attendanceForm.attendance" value="sim" required />
+        <input
+          type="radio"
+          name="attendance"
+          [ngModel]="attendanceForm.attendance"
+          (ngModelChange)="updateAttendance($event)"
+          value="sim"
+          required
+        />
         Sim, estarei lá
       </label>
       <label class="radio">
-        <input type="radio" name="attendance" [(ngModel)]="attendanceForm.attendance" value="nao" required />
+        <input
+          type="radio"
+          name="attendance"
+          [ngModel]="attendanceForm.attendance"
+          (ngModelChange)="updateAttendance($event)"
+          value="nao"
+          required
+        />
         Não poderei ir
       </label>
     </fieldset>

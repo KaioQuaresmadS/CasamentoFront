@@ -17,10 +17,11 @@ export class RsvpApiService {
   constructor(private readonly http: HttpClient) {}
 
   confirmPresence(form: AttendanceForm): Observable<unknown> {
+    const companionsCount = form.attendance === 'sim' ? Number(form.companions) || 0 : 0;
     const request: CreateGuestConfirmationRequest = {
       fullName: form.fullName,
       phone: form.phone,
-      guestsCount: form.guests,
+      guestsCount: companionsCount,
       willAttend: form.attendance === 'sim',
       notes: form.notes || null
     };
