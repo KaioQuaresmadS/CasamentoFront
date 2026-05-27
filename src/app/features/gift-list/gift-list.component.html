@@ -12,7 +12,7 @@
   <div class="gift-grid">
     @for (gift of gifts; track gift.id) {
       <article class="gift-card" [class.gift-card--purchased]="gift.isPurchased">
-        <img [src]="gift.image" [alt]="gift.name" loading="lazy" />
+        <img class="gift-image" [src]="gift.image" [alt]="gift.name" loading="lazy" />
         <div class="gift-card__body">
           @if (gift.isPurchased) {
             <span class="gift-card__badge">Comprado</span>

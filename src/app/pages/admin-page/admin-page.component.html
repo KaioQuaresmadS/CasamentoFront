@@ -58,6 +58,16 @@
         ></textarea>
       </label>
 
+      <label class="image-upload">
+        Imagem
+        <input
+          type="file"
+          name="imageFile"
+          accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+          (change)="updateGiftImage($event)"
+        />
+      </label>
+
       <label>
         URL da imagem
         <input
@@ -68,6 +78,12 @@
           (ngModelChange)="updateForm('imageUrl', $event)"
         />
       </label>
+
+      @if (form().imageUrl) {
+        <div class="image-preview" aria-label="Previa da imagem">
+          <img [src]="form().imageUrl" alt="" />
+        </div>
+      }
 
       <div class="form-row">
         <label>
@@ -123,7 +139,7 @@
         <div class="gift-table">
           @for (gift of gifts(); track gift.id) {
             <article class="gift-row">
-              <img [src]="gift.image" [alt]="gift.name" />
+              <img class="gift-row__image" [src]="gift.image" [alt]="gift.name" />
 
               <div>
                 <strong>{{ gift.name }}</strong>

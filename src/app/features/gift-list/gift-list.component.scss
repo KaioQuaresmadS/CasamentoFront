@@ -47,11 +47,14 @@ p {
   position: relative;
 }
 
-.gift-card img {
+.gift-image {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: 160px;
+  object-fit: contain;
+  padding: 10px;
+  box-sizing: border-box;
   display: block;
+  background: $color-white;
   transition: filter 160ms ease;
 }
 
@@ -115,7 +118,7 @@ button {
   background: $color-olive-soft;
 }
 
-.gift-card--purchased img {
+.gift-card--purchased .gift-image {
   filter: grayscale(1) opacity(0.72);
 }
 

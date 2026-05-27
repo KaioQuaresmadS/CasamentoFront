@@ -16,6 +16,11 @@ interface ProblemDetails {
   errors?: Record<string, string[]>;
 }
 
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const ACCEPTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+const GIFT_IMAGE_SIZE = 300;
+
 const EMPTY_FORM: AdminGiftForm = {
   name: '',
   description: '',
@@ -80,6 +85,32 @@ export class AdminPageComponent implements OnInit {
       ...current,
       [field]: value
     }));
+  }
+
+  protected async updateGiftImage(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    const validationMessage = this.validateImageFile(file);
+
+    if (validationMessage) {
+      input.value = '';
+      this.errorMessage.set(validationMessage);
+      return;
+    }
+
+    try {
+      const imageUrl = await this.resizeImage(file);
+      this.updateForm('imageUrl', imageUrl);
+      this.errorMessage.set('');
+    } catch {
+      input.value = '';
+      this.errorMessage.set('Nao foi possivel processar a imagem enviada.');
+    }
   }
 
   protected newGift(): void {
@@ -187,11 +218,11 @@ export class AdminPageComponent implements OnInit {
 
   private validate(form: AdminGiftForm): string {
     if (!form.name || !form.description || !form.imageUrl) {
-      return 'Preencha nome, descricao e URL da imagem.';
+      return 'Preencha nome, descricao e imagem.';
     }
 
-    if (!this.isHttpUrl(form.imageUrl)) {
-      return 'A imagem precisa ser uma URL http ou https valida.';
+    if (!this.isHttpUrl(form.imageUrl) && !this.isDataImageUrl(form.imageUrl)) {
+      return 'A imagem precisa ser uma URL http/https valida ou um arquivo processado pelo cadastro.';
     }
 
     if (!Number.isFinite(form.price) || form.price <= 0) {
@@ -212,6 +243,52 @@ export class AdminPageComponent implements OnInit {
     } catch {
       return false;
     }
+  }
+
+  private isDataImageUrl(value: string): boolean {
+    return /^data:image\/(jpeg|png|webp);base64,/i.test(value);
+  }
+
+  private validateImageFile(file: File): string {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+
+    if (!extension || !ACCEPTED_IMAGE_EXTENSIONS.includes(extension) || !ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      return 'Envie uma imagem nos formatos jpg, jpeg, png ou webp.';
+    }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      return 'A imagem deve ter no maximo 5MB.';
+    }
+
+    return '';
+  }
+
+  private async resizeImage(file: File): Promise<string> {
+    const bitmap = await createImageBitmap(file);
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    if (!context) {
+      bitmap.close();
+      throw new Error('Canvas indisponivel.');
+    }
+
+    canvas.width = GIFT_IMAGE_SIZE;
+    canvas.height = GIFT_IMAGE_SIZE;
+    context.clearRect(0, 0, GIFT_IMAGE_SIZE, GIFT_IMAGE_SIZE);
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
+
+    const scale = Math.min(1, GIFT_IMAGE_SIZE / bitmap.width, GIFT_IMAGE_SIZE / bitmap.height);
+    const width = Math.round(bitmap.width * scale);
+    const height = Math.round(bitmap.height * scale);
+    const x = Math.round((GIFT_IMAGE_SIZE - width) / 2);
+    const y = Math.round((GIFT_IMAGE_SIZE - height) / 2);
+
+    context.drawImage(bitmap, x, y, width, height);
+    bitmap.close();
+
+    return canvas.toDataURL('image/webp', 0.9);
   }
 
   private readErrorMessage(error: unknown): string {
