@@ -16,8 +16,8 @@ export const WEDDING_INFO: WeddingInfo = {
     },
     {
       label: 'Horário',
-      title: '16h',
-      description: 'DEZESSEIS HORAS'
+      title: '15:00',
+      description: 'QUINZE HORAS'
     },
     {
       label: 'Mensagem',
