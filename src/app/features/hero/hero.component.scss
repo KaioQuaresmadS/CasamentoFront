@@ -2,7 +2,7 @@
 @use "../../../SCSS/mixins" as *;
 
 .hero {
-  min-height: 88vh;
+  min-height: 100vh;
   display: grid;
   align-items: end;
   padding: clamp(22px, 5vw, 56px);
