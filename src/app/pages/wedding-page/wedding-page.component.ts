@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { GiftApiService } from '../../application/api/gift-api.service';
-import { GIFTS, WEDDING_INFO } from '../../application/data/wedding-content.data';
+import { WEDDING_INFO } from '../../application/data/wedding-content.data';
 import { Gift } from '../../domain/models/gift.model';
 import { EventInfoComponent } from '../../features/event-info/event-info.component';
 import { GiftListComponent } from '../../features/gift-list/gift-list.component';
@@ -24,10 +24,9 @@ import { RsvpFormComponent } from '../../features/rsvp-form/rsvp-form.component'
   styleUrl: './wedding-page.component.scss'
 })
 export class WeddingPageComponent implements OnInit {
-  protected readonly gifts = signal<Gift[]>(GIFTS);
+  protected readonly gifts = signal<Gift[]>([]);
   protected readonly weddingInfo = WEDDING_INFO;
   protected readonly selectedGift = signal<Gift | null>(null);
-  protected readonly giftsFromFallback = signal(false);
 
   constructor(private readonly giftApiService: GiftApiService) {}
 
@@ -36,8 +35,7 @@ export class WeddingPageComponent implements OnInit {
       .listActive()
       .pipe(
         catchError(() => {
-          this.giftsFromFallback.set(true);
-          return of(GIFTS);
+          return of([]);
         })
       )
       .subscribe((gifts) => this.gifts.set(this.applyConfirmedPayment(gifts)));

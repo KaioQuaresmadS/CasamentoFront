@@ -23,14 +23,75 @@ h2 {
   @include heading;
 }
 
+h3 {
+  margin: 0;
+  color: $color-olive-dark;
+  font-family: $font-serif;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-weight: 500;
+}
+
 p {
   @include body-copy;
 }
 
-.event-summary {
-  margin: 22px auto 0;
+.event-info__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.event-card {
+  @include card;
+
+  display: grid;
+  gap: 8px;
+  padding: clamp(18px, 3vw, 28px);
+  text-align: center;
+}
+
+.event-card--wide {
+  grid-column: 1 / -1;
+}
+
+.event-card__label {
+  margin: 0;
+  color: $color-rose-dark;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.event-card__description {
+  margin: 0;
   color: $color-olive-dark;
-  font-family: $font-serif;
-  font-size: clamp(1.25rem, 3vw, 2rem);
-  line-height: 1.45;
+  font-weight: 700;
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+.map-frame {
+  overflow: hidden;
+  margin-top: 18px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: $color-cream;
+}
+
+.map-frame iframe {
+  display: block;
+  width: 100%;
+  height: 450px;
+  border: 0;
+}
+
+@media (max-width: 760px) {
+  .event-info__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-frame iframe {
+    height: 340px;
+  }
 }

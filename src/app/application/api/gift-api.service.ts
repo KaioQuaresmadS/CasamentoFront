@@ -28,7 +28,9 @@ export class GiftApiService {
   constructor(private readonly http: HttpClient) {}
 
   listActive(): Observable<Gift[]> {
-    return this.http.get<GiftResponse[]>(`${API_BASE_URL}/gifts`).pipe(
+    return this.http.get<GiftResponse[]>(`${API_BASE_URL}/gifts`, {
+      params: { _: Date.now().toString() }
+    }).pipe(
       map((gifts) => gifts.map((gift) => this.mapGift(gift)))
     );
   }
