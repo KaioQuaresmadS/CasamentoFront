@@ -23,7 +23,7 @@ export const WEDDING_INFO: WeddingInfo = {
       label: 'Mensagem',
       title: 'ECLESIASTES 4:10-12',
       description:
-        '"E, se um cair, o outro levanta o seu companheiro.\nMas ai do que estiver só! Pois, caindo, não haverá quem o levante.\nE, se dois dormirem juntos, eles se aquentarão;\nmas como se aquentará alguém que estiver só?\nE, se alguém prevalecer contra um, dois lhe resistirão;\ne o cordão de três dobras não se rompe facilmente."\n\nContamos com a sua presença!'
+        'Queremos convidar você para o nosso casamento!!\nA cerimônia acontecerá no templo onde nos juntamos para celebrar a Deus e desejamos que esteja conosco nesse dia especial.\n\n10 Porque se um cair, o outro levanta o seu companheiro; mas ai do que estiver só; pois, caindo, não haverá outro que o levante.\n11 Também, se dois dormirem juntos, eles se aquentarão; mas um só, como se aquentará?\n12 E, se alguém prevalecer contra um, os dois lhe resistirão; e o cordão de três dobras não se quebra tão depressa.'
     }
   ]
 };

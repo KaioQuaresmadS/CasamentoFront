@@ -5,22 +5,36 @@
 
     <div class="event-info__grid">
       @for (card of eventCards; track card.label) {
-        <article class="event-card" [class.event-card--wide]="card.label === 'Mensagem'">
-          <p class="event-card__label">{{ card.label }}</p>
-          <h3>{{ card.title }}</h3>
-          <p class="event-card__description">{{ card.description }}</p>
-        </article>
+        @if (card.label !== 'Mensagem') {
+          <article class="event-card">
+            <p class="event-card__label">{{ card.label }}</p>
+            <h3>{{ card.title }}</h3>
+            <p class="event-card__description">{{ card.description }}</p>
+          </article>
+        }
       }
     </div>
 
-    <div class="map-frame">
-      <iframe
-        title="Mapa para IBNELVE"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3753.2544713285374!2d-44.091829515059274!3d-19.829182887554595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa693287b73b607%3A0x537d0bc813275984!2sR.%2015%2C%2041%20-%20Vereda%2C%20Ribeir%C3%A3o%20das%20Neves%20-%20MG%2C%2033822-785!5e0!3m2!1spt-BR!2sbr!4v1780399176859!5m2!1spt-BR!2sbr"
-        allowfullscreen
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
+    <div class="event-info__details">
+      @for (card of eventCards; track card.label) {
+        @if (card.label === 'Mensagem') {
+          <article class="event-card event-card--message">
+            <p class="event-card__label">{{ card.label }}</p>
+            <h3>{{ card.title }}</h3>
+            <p class="event-card__description">{{ card.description }}</p>
+          </article>
+        }
+      }
+
+      <div class="map-frame">
+        <iframe
+          title="Mapa para IBNELVE"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3753.2544713285374!2d-44.091829515059274!3d-19.829182887554595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa693287b73b607%3A0x537d0bc813275984!2sR.%2015%2C%2041%20-%20Vereda%2C%20Ribeir%C3%A3o%20das%20Neves%20-%20MG%2C%2033822-785!5e0!3m2!1spt-BR!2sbr!4v1780399176859!5m2!1spt-BR!2sbr"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
     </div>
   </div>
 </section>
