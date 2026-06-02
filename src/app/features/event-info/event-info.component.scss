@@ -65,9 +65,10 @@ p {
 
 .event-card__description {
   margin: 0;
-  color: $color-olive-dark;
-  font-weight: 700;
-  line-height: 1.65;
+  color: $color-muted;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.5;
   white-space: pre-line;
 }
 
