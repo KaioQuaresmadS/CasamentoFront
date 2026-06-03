@@ -102,20 +102,10 @@ p {
   min-height: 360px;
   padding-inline: clamp(22px, 5vw, 54px);
   text-align: left;
-  background: $color-night;
 }
 
 .event-card--message h3 {
-  color: $color-white;
   font-size: clamp(1.6rem, 3vw, 2.35rem);
-}
-
-.event-card--message .event-card__label {
-  color: $color-rose-soft;
-}
-
-.event-card--message .event-card__description {
-  color: rgba($color-cream, 0.82);
 }
 
 .map-frame {
