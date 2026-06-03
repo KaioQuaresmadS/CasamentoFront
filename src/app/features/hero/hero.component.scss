@@ -2,69 +2,77 @@
 @use "../../../SCSS/mixins" as *;
 
 .hero {
-  min-height: 88vh;
+  min-height: 100svh;
   display: grid;
-  align-items: end;
-  padding: clamp(22px, 5vw, 56px);
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(96px, 12vw, 142px) $space-page clamp(42px, 7vw, 72px);
+  text-align: center;
   background:
-    linear-gradient(180deg, rgba($color-ink, 0.08), rgba($color-ink, 0.7)),
-    url("https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=1800&q=85")
-      center / cover;
+    linear-gradient(180deg, rgba(31, 25, 19, 0.18), rgba(31, 25, 19, 0.52)),
+    url("https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=2200&q=88")
+      center / cover no-repeat;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba($color-white, 0.16), transparent 42%);
+  pointer-events: none;
 }
 
 .hero__content {
-  width: min(760px, 100%);
+  position: relative;
+  z-index: 1;
+  width: min(880px, 100%);
   color: $color-white;
-}
-
-.eyebrow {
-  @include eyebrow;
-
-  color: $color-rose-soft;
+  text-shadow: 0 18px 52px rgba(0, 0, 0, 0.38);
 }
 
 h1 {
-  margin: 0 0 10px;
+  margin: 0;
   font-family: $font-serif;
-  font-size: clamp(2.8rem, 9vw, 6.4rem);
+  font-size: clamp(4.4rem, 14vw, 10.8rem);
   font-weight: 500;
-  line-height: 0.9;
+  line-height: 0.82;
+  letter-spacing: 0;
 }
 
-.date {
-  margin: 0 0 12px;
-  color: $color-white;
-  font-size: clamp(1rem, 2.4vw, 1.45rem);
+.hero__content p {
+  width: min(520px, 100%);
+  margin: clamp(16px, 3vw, 24px) auto 12px;
+  color: rgba($color-white, 0.92);
+  font-size: clamp(1rem, 2vw, 1.28rem);
+  line-height: 1.7;
 }
 
-.hero__message {
-  max-width: 520px;
-  margin: 0 0 26px;
-  color: rgba($color-white, 0.9);
-  font-size: clamp(1rem, 2.2vw, 1.25rem);
-  line-height: 1.45;
-}
-
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-a {
-  @include button-primary;
-
+.hero__content span {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
+  color: rgba($color-white, 0.88);
+  font-size: clamp(0.72rem, 1.4vw, 0.86rem);
+  font-weight: 800;
+  letter-spacing: 0.18em;
 }
 
-a.secondary {
-  @include button-secondary;
+.hero__content span::before,
+.hero__content span::after {
+  content: "";
+  width: clamp(28px, 5vw, 56px);
+  height: 1px;
+  background: rgba($color-white, 0.62);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .hero {
-    min-height: 78vh;
+    min-height: 88svh;
+    padding-top: 88px;
+  }
+
+  h1 {
+    font-size: clamp(4rem, 20vw, 7rem);
   }
 }

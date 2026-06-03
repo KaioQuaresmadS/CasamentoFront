@@ -37,7 +37,7 @@ export class LoginPageComponent {
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: () => void this.router.navigateByUrl('/admin'),
-        error: () => this.errorMessage.set('Login ou senha invalidos.')
+        error: () => this.errorMessage.set('E-mail ou senha invalidos.')
       });
   }
 }

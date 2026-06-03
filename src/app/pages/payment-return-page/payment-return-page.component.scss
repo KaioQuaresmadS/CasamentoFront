@@ -42,7 +42,7 @@ p {
 .reference {
   display: grid;
   gap: 4px;
-  background: $color-cream;
+  background: rgba($color-olive-dark, 0.28);
 }
 
 .reference span {
@@ -54,24 +54,24 @@ p {
 
 .reference strong {
   overflow-wrap: anywhere;
-  color: $color-ink;
+  color: $color-white;
 }
 
 .status-note {
-  color: $color-olive-dark;
-  background: $color-olive-soft;
+  color: $color-white;
+  background: rgba($color-olive, 0.4);
   font-weight: 800;
 }
 
 .error {
-  color: $color-error;
-  background: $color-rose-soft;
+  color: $color-rose-soft;
+  background: rgba($color-error, 0.36);
   font-weight: 800;
 }
 
 .webhook-note {
-  color: $color-muted;
-  background: $color-paper;
+  color: rgba($color-cream, 0.72);
+  background: rgba($color-night, 0.34);
 }
 
 .actions {

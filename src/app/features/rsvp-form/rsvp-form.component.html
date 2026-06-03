@@ -1,64 +1,70 @@
 <section class="section split" id="presenca">
-  <div>
-    <p class="eyebrow">RSVP</p>
-    <h2>Confirme sua presença</h2>
+  <div class="rsvp-intro">
+    <span class="rsvp-intro__mark" aria-hidden="true">✦</span>
+    <p class="eyebrow">Confirmação de presença</p>
+    <h2>Será uma alegria celebrar este dia com você.</h2>
     <p>
-      Sua resposta ajuda a gente a preparar tudo com carinho: quantidade de lugares,
-      comida, bebidas e detalhes importantes para receber todo mundo bem.
+      Sua confirmação nos ajuda a organizar cada detalhe com carinho para receber
+      você da melhor forma.
     </p>
+    <p class="rsvp-intro__date">Por favor, confirme sua presença até 15/09/2026.</p>
   </div>
 
   <form class="rsvp" (ngSubmit)="submitRsvp()" #rsvpForm="ngForm">
-    <label>
-      Nome completo
-      <input type="text" name="fullName" [(ngModel)]="attendanceForm.fullName" required placeholder="Seu nome" />
-    </label>
+    <div class="form-grid">
+      <label class="form-field form-field--wide">
+        Nome completo
+        <input type="text" name="fullName" [(ngModel)]="attendanceForm.fullName" required placeholder="Seu nome" />
+      </label>
 
-    <label>
-      Nº de acompanhantes
-      <input
-        type="number"
-        name="companions"
-        [(ngModel)]="attendanceForm.companions"
-        min="0"
-        max="10"
-        [disabled]="attendanceForm.attendance === 'nao'"
-      />
-      <span class="field-note">Sem contar você.</span>
-    </label>
+      <label class="form-field">
+        Nº de acompanhantes
+        <input
+          type="number"
+          name="companions"
+          [(ngModel)]="attendanceForm.companions"
+          min="0"
+          max="10"
+          [disabled]="attendanceForm.attendance === 'nao'"
+        />
+        <span class="field-note">Sem contar você.</span>
+      </label>
 
-    <label>
-      Celular
-      <input type="tel" name="phone" [(ngModel)]="attendanceForm.phone" required placeholder="(00) 00000-0000" />
-    </label>
+      <label class="form-field">
+        Celular
+        <input type="tel" name="phone" [(ngModel)]="attendanceForm.phone" required placeholder="(00) 00000-0000" />
+      </label>
+    </div>
 
     <fieldset>
       <legend>Você irá ao casamento?</legend>
-      <label class="radio">
-        <input
-          type="radio"
-          name="attendance"
-          [ngModel]="attendanceForm.attendance"
-          (ngModelChange)="updateAttendance($event)"
-          value="sim"
-          required
-        />
-        Sim, estarei lá
-      </label>
-      <label class="radio">
-        <input
-          type="radio"
-          name="attendance"
-          [ngModel]="attendanceForm.attendance"
-          (ngModelChange)="updateAttendance($event)"
-          value="nao"
-          required
-        />
-        Não poderei ir
-      </label>
+      <div class="radio-group">
+        <label class="radio">
+          <input
+            type="radio"
+            name="attendance"
+            [ngModel]="attendanceForm.attendance"
+            (ngModelChange)="updateAttendance($event)"
+            value="sim"
+            required
+          />
+          <span>Sim, estarei lá</span>
+        </label>
+        <label class="radio">
+          <input
+            type="radio"
+            name="attendance"
+            [ngModel]="attendanceForm.attendance"
+            (ngModelChange)="updateAttendance($event)"
+            value="nao"
+            required
+          />
+          <span>Não poderei ir</span>
+        </label>
+      </div>
     </fieldset>
 
-    <label>
+    <label class="form-field">
       Alguma informação importante?
       <textarea
         name="notes"
@@ -73,7 +79,7 @@
     </button>
 
     @if (rsvpSent()) {
-      <p class="success">Confirmação salva no backend. Obrigado por responder!</p>
+      <p class="success">Sua confirmação foi recebida. Obrigado por responder!</p>
     }
 
     @if (submitError()) {

@@ -1,7 +1,7 @@
 import { WeddingInfo } from '../../domain/models/wedding-info.model';
 
 export const WEDDING_INFO: WeddingInfo = {
-  coupleName: 'Ana & Kaio',
+  coupleName: 'Kaio e Ana',
   date: '10/10/2026',
   eventCards: [
     {

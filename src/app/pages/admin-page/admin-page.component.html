@@ -5,7 +5,7 @@
   </header>
 
   <section class="intro">
-    <p class="eyebrow">Area administrativa</p>
+    <p class="eyebrow">Acesso dos noivos</p>
     <h1>Casamento Ana & Kaio</h1>
 
     @if (user(); as currentUser) {
@@ -69,7 +69,7 @@
       </label>
 
       <label>
-        URL da imagem
+        Link da imagem
         <input
           type="url"
           name="imageUrl"
@@ -80,7 +80,7 @@
       </label>
 
       @if (form().imageUrl) {
-        <div class="image-preview" aria-label="Previa da imagem">
+        <div class="image-preview" aria-label="Previa da imagem escolhida">
           <img [src]="form().imageUrl" alt="" />
         </div>
       }
@@ -100,7 +100,7 @@
         </label>
 
         <label>
-          Reservado (%)
+          Parte ja reservada (%)
           <input
             type="number"
             name="reservedPercent"
@@ -127,7 +127,7 @@
 
     <div class="gift-list-panel">
       <div class="section-heading">
-        <p class="eyebrow">Lista publica</p>
+        <p class="eyebrow">Lista no site</p>
         <h2>Presentes ativos</h2>
       </div>
 
@@ -155,7 +155,7 @@
         </div>
       }
 
-      <p class="export-note">Arquivo esperado: convidados_{{ today | date: 'yyyyMMdd' }}.xlsx</p>
+      <p class="export-note">A lista de convidados sera baixada em uma planilha.</p>
     </div>
   </section>
 </main>

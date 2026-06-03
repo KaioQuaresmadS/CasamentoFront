@@ -35,20 +35,20 @@ export class PaymentReturnPageComponent implements OnInit {
       case 'success':
         return {
           eyebrow: 'Pagamento enviado',
-          title: 'Recebemos seu retorno do Mercado Pago',
-          description: 'Vamos conferir o status do pagamento e atualizar a confirmacao assim que o Mercado Pago finalizar o processamento.'
+          title: 'Recebemos sua visita ao Mercado Pago',
+          description: 'Vamos conferir seu pagamento e atualizar a lista assim que o Mercado Pago finalizar o processamento.'
         };
       case 'failure':
         return {
           eyebrow: 'Pagamento nao concluido',
           title: 'Nao foi possivel confirmar o pagamento',
-          description: 'O Mercado Pago retornou uma falha ou cancelamento. Voce pode voltar para a lista e tentar novamente quando quiser.'
+          description: 'O Mercado Pago informou que o pagamento nao foi concluido. Voce pode voltar para a lista e tentar novamente quando quiser.'
         };
       default:
         return {
           eyebrow: 'Pagamento pendente',
           title: 'Seu pagamento ainda esta em processamento',
-          description: 'Alguns meios de pagamento levam mais tempo para confirmar. Continuaremos dependendo da confirmacao final do Mercado Pago.'
+          description: 'Alguns meios de pagamento levam mais tempo para confirmar. Assim que o Mercado Pago avisar, a lista será atualizada.'
         };
     }
   });
@@ -68,7 +68,7 @@ export class PaymentReturnPageComponent implements OnInit {
     this.externalReference.set(externalReference);
 
     if (!paymentId) {
-      this.statusMessage.set('Nao localizamos o identificador do pagamento neste navegador. A confirmacao final ainda sera recebida pelo webhook do Mercado Pago.');
+      this.statusMessage.set('Nao localizamos esse pagamento neste navegador. Mesmo assim, a confirmacao final ainda podera chegar pelo Mercado Pago.');
       return;
     }
 
@@ -89,7 +89,7 @@ export class PaymentReturnPageComponent implements OnInit {
           this.statusMessage.set(this.buildStatusMessage(response));
         },
         error: () => {
-          this.statusError.set('Nao conseguimos consultar o status agora. A confirmacao final ainda vem pelo webhook do Mercado Pago.');
+          this.statusError.set('Nao conseguimos conferir o pagamento agora. A confirmacao final ainda podera chegar pelo Mercado Pago.');
         }
       });
   }

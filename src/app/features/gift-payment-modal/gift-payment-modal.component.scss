@@ -8,7 +8,7 @@
   display: grid;
   place-items: center;
   padding: 18px;
-  background: rgba($color-ink, 0.58);
+  background: rgba(0, 0, 0, 0.72);
 }
 
 .modal {
@@ -59,7 +59,7 @@ button {
 .contributor-grid label {
   display: grid;
   gap: 8px;
-  color: $color-olive-dark;
+  color: $color-cream;
   font-weight: 800;
 }
 
@@ -79,8 +79,8 @@ button.secondary,
   width: 44px;
   height: 44px;
   padding: 0;
-  color: $color-olive-dark;
-  background: rgba($color-white, 0.9);
+  color: $color-rose-soft;
+  background: rgba($color-night, 0.9);
   font-size: 1.4rem;
   line-height: 1;
 }
@@ -101,7 +101,7 @@ button.secondary,
   display: grid;
   gap: 8px;
   margin-bottom: 18px;
-  color: $color-olive-dark;
+  color: $color-cream;
   font-weight: 800;
 }
 
@@ -111,7 +111,7 @@ button.secondary,
 }
 
 .quota span {
-  color: $color-muted;
+  color: rgba($color-cream, 0.72);
   font-weight: 700;
 }
 
@@ -121,7 +121,7 @@ button.secondary,
   margin-top: 16px;
   padding: 16px;
   border-radius: 8px;
-  background: $color-cream;
+  background: rgba($color-olive-dark, 0.28);
 }
 
 .payment-box {
@@ -130,20 +130,20 @@ button.secondary,
 }
 
 .payment-box__hint {
-  color: $color-muted;
+  color: rgba($color-cream, 0.76);
   font-weight: 800;
 }
 
 .payment-box span {
   display: block;
   margin-bottom: 6px;
-  color: $color-muted;
+  color: rgba($color-cream, 0.72);
   font-size: 0.86rem;
   font-weight: 800;
 }
 
 .payment-box strong {
-  color: $color-ink;
+  color: $color-rose-soft;
   font-size: 1.5rem;
 }
 
@@ -157,18 +157,18 @@ button.secondary,
 }
 
 .success {
-  color: $color-olive-dark;
-  background: $color-olive-soft;
+  color: $color-white;
+  background: rgba($color-olive, 0.42);
 }
 
 .error {
-  color: $color-error;
-  background: $color-rose-soft;
+  color: $color-rose-soft;
+  background: rgba($color-error, 0.36);
 }
 
 .status-note {
-  color: $color-olive-dark;
-  background: $color-rose-soft;
+  color: $color-rose-soft;
+  background: rgba($color-rose-dark, 0.2);
 }
 
 @media (max-width: 760px) {

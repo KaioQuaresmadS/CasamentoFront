@@ -63,7 +63,7 @@ export class GiftPaymentModalComponent {
 
     this.isCreatingPayment.set(true);
     this.paymentError.set('');
-    this.paymentValidationMessage.set('Criando checkout Mercado Pago...');
+    this.paymentValidationMessage.set('Preparando seu pagamento...');
 
     this.contributionApiService
       .createMercadoPagoPayment(
@@ -82,7 +82,7 @@ export class GiftPaymentModalComponent {
           const checkoutUrl = this.extractCheckoutUrl(response);
           if (!checkoutUrl) {
             this.paymentValidationMessage.set('');
-            this.paymentError.set('Pagamento criado, mas o backend nao retornou o link do Checkout Pro.');
+            this.paymentError.set('O pagamento foi preparado, mas nao conseguimos abrir a pagina do Mercado Pago.');
             return;
           }
 
@@ -150,11 +150,8 @@ export class GiftPaymentModalComponent {
   }
 
   private getPaymentErrorMessage(error: unknown): string {
-    if (error instanceof HttpErrorResponse) {
-      const backendMessage = error.error?.detail || error.error?.message || error.error?.title;
-      if (backendMessage) {
-        return backendMessage;
-      }
+    if (error instanceof HttpErrorResponse && error.status === 400) {
+      return 'Confira os dados informados e tente novamente.';
     }
 
     return 'Nao foi possivel abrir o pagamento agora. Tente novamente em instantes.';

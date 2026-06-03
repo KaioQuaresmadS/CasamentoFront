@@ -1,6 +1,14 @@
 <main>
+  <nav class="site-nav" aria-label="Navegação principal">
+    <a href="#informacoes">Cerimônia</a>
+    <a class="site-nav__brand" href="#topo">Kaio & Ana</a>
+    <div class="site-nav__links">
+      <a href="#presenca">Presença</a>
+      <a href="#presentes">Presentes</a>
+    </div>
+  </nav>
   <app-hero [coupleName]="weddingInfo.coupleName" [weddingDate]="weddingInfo.date" />
-  <a class="admin-link" routerLink="/login" aria-label="Area administrativa">Admin</a>
+  <a class="admin-link" routerLink="/login" aria-label="Acesso dos noivos">Noivos</a>
   <app-event-info [eventCards]="weddingInfo.eventCards" />
   <app-rsvp-form />
   <app-gift-list [gifts]="gifts()" (giftSelected)="chooseGift($event)" />

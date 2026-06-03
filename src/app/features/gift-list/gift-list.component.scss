@@ -6,7 +6,7 @@
 }
 
 .gifts {
-  background: $color-cream;
+  background: linear-gradient(180deg, $color-paper 0%, $color-white 100%);
 }
 
 .section__intro {
@@ -26,7 +26,7 @@ h2 {
 
 h3 {
   margin: 0 0 8px;
-  color: $color-olive-dark;
+  color: $color-ink;
   font-size: 1.1rem;
 }
 
@@ -36,35 +36,42 @@ p {
 
 .gift-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
 }
 
 .gift-card {
   @include card;
 
+  display: grid;
+  grid-template-rows: 190px 1fr;
   overflow: hidden;
   position: relative;
 }
 
 .gift-image {
   width: 100%;
-  height: 160px;
+  height: 100%;
   object-fit: contain;
   padding: 10px;
   box-sizing: border-box;
   display: block;
-  background: $color-white;
+  background:
+    linear-gradient(135deg, rgba($color-rose-soft, 0.32), transparent),
+    $color-white;
   transition: filter 160ms ease;
 }
 
 .gift-card__body {
+  display: grid;
+  align-content: start;
   padding: 18px;
-  text-align: center;
+  text-align: left;
 }
 
 .gift-card__badge {
   display: inline-flex;
+  justify-self: start;
   margin-bottom: 10px;
   border-radius: $radius-pill;
   padding: 6px 10px;
@@ -80,19 +87,19 @@ p {
   overflow: hidden;
   margin: 18px 0;
   border-radius: 999px;
-  background: $color-olive-soft;
+  background: rgba($color-ink, 0.12);
 }
 
 .progress span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: $color-rose;
+  background: $color-olive;
 }
 
 .gift-card__progress {
   margin: -6px 0 18px;
-  color: $color-muted;
+  color: rgba($color-ink, 0.58);
   font-size: 0.88rem;
   font-weight: 700;
 }
@@ -101,12 +108,13 @@ p {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 12px;
+  margin-top: auto;
 }
 
 .gift-card__footer strong {
-  color: $color-olive-dark;
+  color: $color-rose-dark;
 }
 
 button {
@@ -114,8 +122,8 @@ button {
 }
 
 .gift-card--purchased {
-  color: $color-muted;
-  background: $color-olive-soft;
+  color: rgba($color-ink, 0.62);
+  background: rgba($color-olive-soft, 0.44);
 }
 
 .gift-card--purchased .gift-image {

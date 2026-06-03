@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -31,7 +31,7 @@ const EMPTY_FORM: AdminGiftForm = {
 
 @Component({
   selector: 'app-admin-page',
-  imports: [CurrencyPipe, DatePipe, FormsModule, RouterLink],
+  imports: [CurrencyPipe, FormsModule, RouterLink],
   templateUrl: './admin-page.component.html',
   styleUrl: './admin-page.component.scss'
 })
@@ -222,7 +222,7 @@ export class AdminPageComponent implements OnInit {
     }
 
     if (!this.isHttpUrl(form.imageUrl) && !this.isDataImageUrl(form.imageUrl)) {
-      return 'A imagem precisa ser uma URL http/https valida ou um arquivo processado pelo cadastro.';
+      return 'Use um link de imagem valido ou envie uma imagem pelo cadastro.';
     }
 
     if (!Number.isFinite(form.price) || form.price <= 0) {

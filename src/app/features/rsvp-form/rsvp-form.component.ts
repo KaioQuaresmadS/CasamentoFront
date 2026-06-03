@@ -34,7 +34,7 @@ export class RsvpFormComponent {
       .pipe(finalize(() => this.isSubmitting.set(false)))
       .subscribe({
         next: () => this.rsvpSent.set(true),
-        error: () => this.submitError.set('Nao foi possivel salvar sua confirmacao agora. Confira se o backend esta rodando.')
+        error: () => this.submitError.set('Nao foi possivel salvar sua confirmacao agora. Tente novamente em alguns instantes.')
       });
   }
 
