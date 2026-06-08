@@ -10,7 +10,10 @@ import { Gift } from '../../domain/models/gift.model';
 })
 export class GiftListComponent {
   @Input({ required: true }) gifts: Gift[] = [];
+  @Input() isLoading = false;
   @Output() giftSelected = new EventEmitter<Gift>();
+
+  protected readonly loadingCards = Array.from({ length: 6 }, (_, index) => index);
 
   protected giftProgress(gift: Gift): number {
     if (gift.isPurchased) {

@@ -10,6 +10,24 @@
   </div>
 
   <div class="gift-grid">
+    @if (isLoading && gifts.length === 0) {
+      @for (card of loadingCards; track card) {
+        <article class="gift-card gift-card--loading" aria-hidden="true">
+          <div class="gift-image gift-image--placeholder"></div>
+          <div class="gift-card__body">
+            <span class="loading-line loading-line--title"></span>
+            <span class="loading-line"></span>
+            <span class="loading-line loading-line--short"></span>
+            <div class="progress"></div>
+            <div class="gift-card__footer">
+              <span class="loading-line loading-line--price"></span>
+              <span class="loading-button"></span>
+            </div>
+          </div>
+        </article>
+      }
+    }
+
     @for (gift of gifts; track gift.id) {
       <article class="gift-card" [class.gift-card--purchased]="gift.isPurchased">
         <img class="gift-image" [src]="gift.image" [alt]="gift.name" loading="lazy" />

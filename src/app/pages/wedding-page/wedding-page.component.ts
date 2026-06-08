@@ -24,21 +24,30 @@ import { RsvpFormComponent } from '../../features/rsvp-form/rsvp-form.component'
   styleUrl: './wedding-page.component.scss'
 })
 export class WeddingPageComponent implements OnInit {
+  private readonly giftCacheKey = 'weddingGiftListCache';
   protected readonly gifts = signal<Gift[]>([]);
+  protected readonly isLoadingGifts = signal(true);
   protected readonly weddingInfo = WEDDING_INFO;
   protected readonly selectedGift = signal<Gift | null>(null);
 
   constructor(private readonly giftApiService: GiftApiService) {}
 
   ngOnInit(): void {
+    this.gifts.set(this.applyConfirmedPayment(this.readCachedGifts()));
+
     this.giftApiService
       .listActive()
       .pipe(
         catchError(() => {
-          return of([]);
+          return of(this.gifts());
         })
       )
-      .subscribe((gifts) => this.gifts.set(this.applyConfirmedPayment(gifts)));
+      .subscribe((gifts) => {
+        const updatedGifts = this.applyConfirmedPayment(gifts);
+        this.gifts.set(updatedGifts);
+        this.cacheGifts(updatedGifts);
+        this.isLoadingGifts.set(false);
+      });
   }
 
   protected chooseGift(gift: Gift): void {
@@ -88,5 +97,28 @@ export class WeddingPageComponent implements OnInit {
       localStorage.removeItem('confirmedGiftPayment');
       return gifts;
     }
+  }
+
+  private readCachedGifts(): Gift[] {
+    const cachedGifts = localStorage.getItem(this.giftCacheKey);
+    if (!cachedGifts) {
+      return [];
+    }
+
+    try {
+      const parsed = JSON.parse(cachedGifts);
+      return Array.isArray(parsed) ? (parsed as Gift[]) : [];
+    } catch {
+      localStorage.removeItem(this.giftCacheKey);
+      return [];
+    }
+  }
+
+  private cacheGifts(gifts: Gift[]): void {
+    if (gifts.length === 0) {
+      return;
+    }
+
+    localStorage.setItem(this.giftCacheKey, JSON.stringify(gifts));
   }
 }

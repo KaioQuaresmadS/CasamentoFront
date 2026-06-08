@@ -4,11 +4,11 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 40;
   display: grid;
   place-items: center;
-  padding: 18px;
-  background: rgba(0, 0, 0, 0.72);
+  padding: clamp(12px, 3vw, 24px);
+  background: rgba(22, 23, 17, 0.64);
 }
 
 .modal {
@@ -16,17 +16,26 @@
 
   position: relative;
   display: grid;
-  grid-template-columns: minmax(240px, 0.85fr) minmax(320px, 1.15fr);
-  width: min(980px, 100%);
-  max-height: min(860px, 92vh);
+  grid-template-columns: minmax(220px, 0.68fr) minmax(360px, 1.32fr);
+  width: min(920px, 100%);
+  max-height: min(760px, 92vh);
   overflow: auto;
+  background: $color-white;
+  box-shadow: 0 24px 72px rgba($color-night, 0.34);
 }
 
 .modal > img {
   width: 100%;
-  height: 100%;
-  min-height: 420px;
-  object-fit: cover;
+  height: min(100%, 560px);
+  min-height: 0;
+  max-height: 92vh;
+  object-fit: contain;
+  align-self: stretch;
+  padding: clamp(14px, 3vw, 24px);
+  box-sizing: border-box;
+  background:
+    linear-gradient(135deg, rgba($color-rose-soft, 0.32), transparent),
+    $color-paper;
 }
 
 .modal__content {
@@ -39,6 +48,8 @@
 
 h2 {
   @include heading;
+
+  font-size: clamp(1.9rem, 4vw, 3.15rem);
 }
 
 p {
@@ -59,12 +70,28 @@ button {
 .contributor-grid label {
   display: grid;
   gap: 8px;
-  color: $color-cream;
+  color: $color-ink;
   font-weight: 800;
 }
 
 .contributor-grid input {
   @include input;
+
+  border-color: rgba($color-ink, 0.18);
+  color: $color-ink;
+  background: rgba($color-white, 0.92);
+  box-shadow: inset 0 1px rgba($color-white, 0.72);
+}
+
+.contributor-grid input::placeholder {
+  color: rgba($color-ink, 0.48);
+}
+
+.contributor-grid input:focus {
+  border-color: $color-rose;
+  box-shadow:
+    0 0 0 3px rgba($color-rose, 0.18),
+    inset 0 1px rgba($color-white, 0.72);
 }
 
 button.secondary,
@@ -79,8 +106,9 @@ button.secondary,
   width: 44px;
   height: 44px;
   padding: 0;
-  color: $color-rose-soft;
-  background: rgba($color-night, 0.9);
+  color: $color-ink;
+  background: rgba($color-white, 0.95);
+  box-shadow: 0 10px 28px rgba($color-night, 0.16);
   font-size: 1.4rem;
   line-height: 1;
 }
@@ -94,14 +122,14 @@ button.secondary,
 
 .choice-group button.active {
   color: $color-white;
-  background: $color-olive;
+  background: $color-olive-dark;
 }
 
 .quota {
   display: grid;
   gap: 8px;
   margin-bottom: 18px;
-  color: $color-cream;
+  color: $color-ink;
   font-weight: 800;
 }
 
@@ -111,7 +139,7 @@ button.secondary,
 }
 
 .quota span {
-  color: rgba($color-cream, 0.72);
+  color: rgba($color-ink, 0.68);
   font-weight: 700;
 }
 
@@ -121,7 +149,7 @@ button.secondary,
   margin-top: 16px;
   padding: 16px;
   border-radius: 8px;
-  background: rgba($color-olive-dark, 0.28);
+  background: rgba($color-olive-soft, 0.52);
 }
 
 .payment-box {
@@ -130,20 +158,20 @@ button.secondary,
 }
 
 .payment-box__hint {
-  color: rgba($color-cream, 0.76);
+  color: rgba($color-ink, 0.72);
   font-weight: 800;
 }
 
 .payment-box span {
   display: block;
   margin-bottom: 6px;
-  color: rgba($color-cream, 0.72);
+  color: rgba($color-ink, 0.66);
   font-size: 0.86rem;
   font-weight: 800;
 }
 
 .payment-box strong {
-  color: $color-rose-soft;
+  color: $color-rose-dark;
   font-size: 1.5rem;
 }
 
@@ -157,18 +185,18 @@ button.secondary,
 }
 
 .success {
-  color: $color-white;
-  background: rgba($color-olive, 0.42);
+  color: $color-ink;
+  background: rgba($color-olive-soft, 0.72);
 }
 
 .error {
-  color: $color-rose-soft;
-  background: rgba($color-error, 0.36);
+  color: $color-error;
+  background: rgba($color-rose-soft, 0.6);
 }
 
 .status-note {
-  color: $color-rose-soft;
-  background: rgba($color-rose-dark, 0.2);
+  color: $color-ink;
+  background: rgba($color-rose-soft, 0.48);
 }
 
 @media (max-width: 760px) {
@@ -180,8 +208,10 @@ button.secondary,
   }
 
   .modal > img {
-    min-height: 220px;
+    width: 100%;
+    height: clamp(180px, 38vh, 260px);
     max-height: 260px;
+    object-fit: contain;
   }
 
 }

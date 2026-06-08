@@ -134,3 +134,65 @@ button {
 .gift-card--purchased button {
   background: $color-muted;
 }
+
+.gift-card--loading {
+  pointer-events: none;
+}
+
+.gift-image--placeholder,
+.loading-line,
+.loading-button {
+  overflow: hidden;
+  position: relative;
+  border-radius: $radius-sm;
+  background: rgba($color-mist, 0.72);
+}
+
+.gift-image--placeholder::after,
+.loading-line::after,
+.loading-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba($color-white, 0.72), transparent);
+  animation: loading-shimmer 900ms ease-in-out infinite;
+  transform: translateX(-100%);
+}
+
+.loading-line {
+  display: block;
+  width: 100%;
+  height: 14px;
+}
+
+.loading-line--title {
+  width: 68%;
+  height: 20px;
+  margin-bottom: 8px;
+}
+
+.loading-line--short {
+  width: 52%;
+}
+
+.loading-line--price {
+  width: 84px;
+  height: 18px;
+}
+
+.loading-button {
+  display: block;
+  width: 96px;
+  height: 44px;
+}
+
+.gift-card--loading .progress {
+  margin-top: 20px;
+  background: rgba($color-mist, 0.92);
+}
+
+@keyframes loading-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}

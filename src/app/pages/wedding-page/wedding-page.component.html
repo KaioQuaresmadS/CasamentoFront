@@ -11,7 +11,7 @@
   <a class="admin-link" routerLink="/login" aria-label="Acesso dos noivos">Noivos</a>
   <app-event-info [eventCards]="weddingInfo.eventCards" />
   <app-rsvp-form />
-  <app-gift-list [gifts]="gifts()" (giftSelected)="chooseGift($event)" />
+  <app-gift-list [gifts]="gifts()" [isLoading]="isLoadingGifts()" (giftSelected)="chooseGift($event)" />
 </main>
 
 @if (selectedGift(); as gift) {
