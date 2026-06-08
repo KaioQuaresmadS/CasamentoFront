@@ -3,6 +3,8 @@
 
 .hero {
   min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
   position: relative;
@@ -68,7 +70,9 @@ h1 {
 
 @media (max-width: 860px) {
   .hero {
-    min-height: 88svh;
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
     padding-top: 88px;
   }
 
