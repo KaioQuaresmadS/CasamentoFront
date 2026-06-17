@@ -51,6 +51,7 @@ p {
 }
 
 .gift-card__media {
+  position: relative;
   display: grid;
   place-items: center;
   width: 100%;
@@ -63,9 +64,12 @@ p {
 }
 
 .gift-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: center center;
   padding: 10px;
   box-sizing: border-box;
   display: block;
@@ -73,6 +77,8 @@ p {
 }
 
 .gift-card__body {
+  position: relative;
+  z-index: 1;
   display: grid;
   align-content: start;
   min-width: 0;
@@ -154,9 +160,13 @@ button {
 .loading-line,
 .loading-button {
   overflow: hidden;
-  position: relative;
   border-radius: $radius-sm;
   background: rgba($color-mist, 0.72);
+}
+
+.loading-line,
+.loading-button {
+  position: relative;
 }
 
 .gift-image--placeholder::after,
@@ -225,8 +235,10 @@ button {
   }
 
   .gift-card__media {
-    height: clamp(210px, 58vw, 340px);
-    min-height: 210px;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    min-height: 0;
+    flex: 0 0 auto;
   }
 
   .gift-card__body {
@@ -246,7 +258,7 @@ button {
 
 @media (max-width: 420px) {
   .gift-card__media {
-    height: min(68vw, 300px);
+    aspect-ratio: 1 / 1;
   }
 
   .gift-card__footer {
