@@ -153,6 +153,9 @@ h1 {
 
 @media (max-width: 860px) {
   .hero {
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
     min-height: 100vh;
     min-height: 100svh;
     min-height: 100dvh;
@@ -160,7 +163,10 @@ h1 {
   }
 
   .hero__photo {
-    object-fit: contain;
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
+    object-fit: cover;
     object-position: center;
   }
 
