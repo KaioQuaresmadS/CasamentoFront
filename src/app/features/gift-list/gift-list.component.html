@@ -13,7 +13,9 @@
     @if (isLoading && gifts.length === 0) {
       @for (card of loadingCards; track card) {
         <article class="gift-card gift-card--loading" aria-hidden="true">
-          <div class="gift-image gift-image--placeholder"></div>
+          <div class="gift-card__media">
+            <div class="gift-image gift-image--placeholder"></div>
+          </div>
           <div class="gift-card__body">
             <span class="loading-line loading-line--title"></span>
             <span class="loading-line"></span>
@@ -30,7 +32,9 @@
 
     @for (gift of gifts; track gift.id) {
       <article class="gift-card" [class.gift-card--purchased]="gift.isPurchased">
-        <img class="gift-image" [src]="gift.image" [alt]="gift.name" loading="lazy" />
+        <div class="gift-card__media">
+          <img class="gift-image" [src]="gift.image" [alt]="gift.name" loading="lazy" />
+        </div>
         <div class="gift-card__body">
           @if (gift.isPurchased) {
             <span class="gift-card__badge">Comprado</span>

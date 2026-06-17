@@ -1,10 +1,14 @@
 @use "variables" as *;
 
 html {
+  min-height: 100%;
+  min-height: -webkit-fill-available;
   scroll-behavior: smooth;
 }
 
 body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
   margin: 0;
   background: $color-paper;
 }

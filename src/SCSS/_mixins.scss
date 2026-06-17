@@ -12,6 +12,7 @@
 
 @mixin section {
   padding: $section-y $space-page;
+  scroll-margin-top: 104px;
 }
 
 @mixin section-inner {
