@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 
 @Component({
   selector: 'app-hero',
@@ -8,4 +8,10 @@ import { Component, Input } from '@angular/core';
 export class HeroComponent {
   @Input({ required: true }) coupleName = '';
   @Input({ required: true }) weddingDate = '';
+
+  protected readonly heroImageLoaded = signal(false);
+
+  protected showHero(): void {
+    this.heroImageLoaded.set(true);
+  }
 }

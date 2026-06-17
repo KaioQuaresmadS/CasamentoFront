@@ -32,6 +32,43 @@
   pointer-events: none;
 }
 
+.hero__loader {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 14px;
+  color: rgba($color-white, 0.9);
+  background: #191511;
+  transition:
+    opacity 220ms ease,
+    visibility 220ms ease;
+}
+
+.hero--ready .hero__loader {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.hero__loader span {
+  width: 34px;
+  height: 34px;
+  border: 3px solid rgba($color-white, 0.22);
+  border-top-color: rgba($color-white, 0.86);
+  border-radius: 50%;
+  animation: hero-loader-spin 800ms linear infinite;
+}
+
+.hero__loader p {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
 .hero__photo-backdrop,
 .hero__photo {
   position: absolute;
@@ -41,8 +78,9 @@
 }
 
 .hero__photo-backdrop {
+  display: none;
   object-fit: cover;
-  filter: blur(22px);
+  filter: blur(14px);
   opacity: 0.62;
   transform: scale(1.08);
 }
@@ -50,6 +88,12 @@
 .hero__photo {
   object-fit: contain;
   object-position: center 46%;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.hero--ready .hero__photo {
+  opacity: 1;
 }
 
 .hero__content {
@@ -58,6 +102,12 @@
   width: min(880px, 100%);
   color: $color-white;
   text-shadow: 0 18px 52px rgba(0, 0, 0, 0.38);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.hero--ready .hero__content {
+  opacity: 1;
 }
 
 h1 {
@@ -95,6 +145,12 @@ h1 {
   background: rgba($color-white, 0.62);
 }
 
+@media (min-width: 861px) {
+  .hero__photo-backdrop {
+    display: block;
+  }
+}
+
 @media (max-width: 860px) {
   .hero {
     min-height: 100vh;
@@ -103,7 +159,18 @@ h1 {
     padding-top: 88px;
   }
 
+  .hero__photo {
+    object-fit: contain;
+    object-position: center;
+  }
+
   h1 {
     font-size: clamp(4rem, 20vw, 7rem);
+  }
+}
+
+@keyframes hero-loader-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
