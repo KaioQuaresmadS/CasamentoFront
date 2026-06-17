@@ -24,7 +24,7 @@
 
 h1 {
   margin: 18px 0 24px;
-  color: $color-white;
+  color: $color-ink;
   font-size: 1.8rem;
 }
 
@@ -39,7 +39,7 @@ form {
 }
 
 label {
-  color: $color-cream;
+  color: $color-ink;
   font-weight: 700;
 }
 
@@ -47,6 +47,13 @@ input {
   @include input;
 
   min-height: 46px;
+  border-color: rgba($color-ink, 0.22);
+  color: $color-ink;
+  background: rgba($color-ink, 0.34);
+
+  &::placeholder {
+    color: rgba($color-ink, 0.66);
+  }
 }
 
 button {

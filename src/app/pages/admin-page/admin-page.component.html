@@ -21,12 +21,22 @@
     </div>
   </section>
 
-  @if (errorMessage()) {
-    <p class="feedback error">{{ errorMessage() }}</p>
-  }
-
-  @if (successMessage()) {
-    <p class="feedback success">{{ successMessage() }}</p>
+  @if (feedbackModal(); as feedback) {
+    <div class="feedback-backdrop" role="presentation" (click)="closeFeedback()">
+      <section
+        class="feedback-modal"
+        [class.feedback-modal--success]="feedback.type === 'success'"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="feedback-title"
+        (click)="$event.stopPropagation()"
+      >
+        <p class="feedback-kicker">{{ feedback.type === 'success' ? 'Confirmado' : 'Atencao' }}</p>
+        <h2 id="feedback-title">{{ feedback.title }}</h2>
+        <p>{{ feedback.message }}</p>
+        <button type="button" (click)="closeFeedback()">Fechar</button>
+      </section>
+    </div>
   }
 
   <section class="admin-grid">

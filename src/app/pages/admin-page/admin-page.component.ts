@@ -9,6 +9,13 @@ import { RsvpApiService } from '../../application/api/rsvp-api.service';
 import { Gift, GiftUpsertRequest } from '../../domain/models/gift.model';
 
 type AdminGiftForm = GiftUpsertRequest;
+type FeedbackType = 'error' | 'success';
+
+interface FeedbackModal {
+  type: FeedbackType;
+  title: string;
+  message: string;
+}
 
 interface ProblemDetails {
   title?: string;
@@ -52,6 +59,28 @@ export class AdminPageComponent implements OnInit {
   protected readonly successMessage = signal('');
   protected readonly today = new Date();
   protected readonly isEditing = computed(() => this.selectedGiftId() !== null);
+  protected readonly feedbackModal = computed<FeedbackModal | null>(() => {
+    const error = this.errorMessage();
+    const success = this.successMessage();
+
+    if (error) {
+      return {
+        type: 'error',
+        title: 'Algo precisa de ajuste',
+        message: error
+      };
+    }
+
+    if (success) {
+      return {
+        type: 'success',
+        title: 'Tudo certo',
+        message: success
+      };
+    }
+
+    return null;
+  });
 
   ngOnInit(): void {
     this.loadGifts();
@@ -204,6 +233,11 @@ export class AdminPageComponent implements OnInit {
   protected logout(): void {
     this.authService.logout();
     void this.router.navigateByUrl('/');
+  }
+
+  protected closeFeedback(): void {
+    this.errorMessage.set('');
+    this.successMessage.set('');
   }
 
   private normalizeForm(form: AdminGiftForm): AdminGiftForm {

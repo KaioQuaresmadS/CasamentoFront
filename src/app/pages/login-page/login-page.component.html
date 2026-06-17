@@ -3,22 +3,22 @@
     <a routerLink="/" class="back-link">Voltar para o site</a>
     <h1>Acesso Ana & Kaio</h1>
 
-    <form [formGroup]="form" autocomplete="off" (ngSubmit)="submit()">
+    <form [formGroup]="form" autocomplete="on" (ngSubmit)="submit()">
       <label>
         E-mail
-        <input type="text" formControlName="email" autocomplete="off"/>
+        <input type="email" formControlName="email" autocomplete="username"/>
       </label>
 
       <label>
         Senha
-        <input type="password" formControlName="password" autocomplete="new-password"/>
+        <input type="password" formControlName="password" autocomplete="current-password"/>
       </label>
 
       @if (errorMessage(); as message) {
         <p class="error">{{ message }}</p>
       }
 
-      <button type="submit" [disabled]="form.invalid || isLoading()">
+      <button type="submit" [disabled]="isLoading()">
         {{ isLoading() ? 'Entrando...' : 'Entrar' }}
       </button>
     </form>

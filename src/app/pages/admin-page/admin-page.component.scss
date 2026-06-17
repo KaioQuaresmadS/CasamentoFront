@@ -27,8 +27,7 @@ button {
 }
 
 .intro,
-.admin-grid,
-.feedback {
+.admin-grid {
   max-width: 1040px;
   margin: 0 auto;
 }
@@ -84,31 +83,62 @@ h2 {
   width: 100%;
 }
 
-.feedback {
-  margin-top: 16px;
-  border-radius: $radius-sm;
-  padding: 12px 14px;
-  font-weight: 800;
-}
-
-.error {
-  border: 1px solid rgba($color-error, 0.28);
-  color: $color-rose-soft;
-  background: rgba($color-error, 0.32);
-}
-
-.success {
-  border: 1px solid rgba($color-olive, 0.32);
-  color: $color-white;
-  background: rgba($color-olive, 0.38);
-}
-
 .admin-grid {
   display: grid;
   grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
   gap: 20px;
   align-items: start;
   margin-top: 20px;
+}
+
+.feedback-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba($color-night, 0.54);
+}
+
+.feedback-modal {
+  width: min(100%, 420px);
+  border: 1px solid rgba($color-error, 0.3);
+  border-radius: $radius-md;
+  padding: 24px;
+  color: $color-ink;
+  background: $color-white;
+  box-shadow: 0 22px 60px rgba($color-night, 0.28);
+}
+
+.feedback-modal--success {
+  border-color: rgba($color-olive-dark, 0.34);
+}
+
+.feedback-kicker {
+  margin: 0 0 8px;
+  color: $color-rose-dark;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.feedback-modal--success .feedback-kicker {
+  color: $color-olive-dark;
+}
+
+.feedback-modal h2 {
+  font-family: $font-sans;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.feedback-modal p:not(.feedback-kicker) {
+  margin: 12px 0 20px;
+  color: rgba($color-ink, 0.74);
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .gift-form,
