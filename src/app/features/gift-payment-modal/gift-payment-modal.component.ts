@@ -5,13 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import {
   CreateMercadoPagoPaymentResponse,
-  GiftContributionApiService
+  GiftContributionApiService,
+  MercadoPagoPaymentMethod
 } from '../../application/api/gift-contribution-api.service';
 import { calculateGiftPayment, calculateQuotaValue } from '../../application/use-cases/calculate-gift-payment';
 import { Gift } from '../../domain/models/gift.model';
 import { GiftPurchaseMode } from '../../domain/models/payment.model';
 
 type PaymentResponse = CreateMercadoPagoPaymentResponse;
+type CheckoutPaymentMethod = Exclude<MercadoPagoPaymentMethod, 'mercado_pago'>;
 
 @Component({
   selector: 'app-gift-payment-modal',
@@ -25,6 +27,7 @@ export class GiftPaymentModalComponent {
 
   readonly selectedMode = signal<GiftPurchaseMode>('full');
   readonly quotaQuantity = signal(1);
+  readonly selectedPaymentMethod = signal<CheckoutPaymentMethod>('pix');
   readonly isCreatingPayment = signal(false);
   readonly paymentError = signal('');
   readonly paymentValidationMessage = signal('');
@@ -55,6 +58,11 @@ export class GiftPaymentModalComponent {
     this.quotaQuantity.set(Number(input.value));
   }
 
+  setPaymentMethod(method: CheckoutPaymentMethod): void {
+    this.selectedPaymentMethod.set(method);
+    this.resetPayment();
+  }
+
   startPayment(): void {
     if (!this.contributor.name.trim() || !this.contributor.email.trim() || !this.contributor.phone.trim()) {
       this.paymentError.set('Informe seu nome, email e celular para iniciar o pagamento.');
@@ -65,20 +73,42 @@ export class GiftPaymentModalComponent {
     this.paymentError.set('');
     this.paymentValidationMessage.set('Preparando seu pagamento...');
 
-    this.contributionApiService
-      .createPixPayment(
-        this.gift.id,
-        this.contributor.name,
-        this.contributor.email,
-        this.contributor.phone,
-        this.paymentAmount,
-        this.selectedMode(),
-        this.quotaQuantity()
-      )
+    const paymentMethod = this.selectedPaymentMethod();
+    const paymentRequest =
+      paymentMethod === 'pix'
+        ? this.contributionApiService.createPixPayment(
+            this.gift.id,
+            this.contributor.name,
+            this.contributor.email,
+            this.contributor.phone,
+            this.paymentAmount,
+            this.selectedMode(),
+            this.quotaQuantity()
+          )
+        : this.contributionApiService.createMercadoPagoPayment(
+            this.gift.id,
+            this.contributor.name,
+            this.contributor.email,
+            this.contributor.phone,
+            this.paymentAmount,
+            paymentMethod,
+            this.selectedMode(),
+            this.quotaQuantity()
+          );
+
+    paymentRequest
       .pipe(finalize(() => this.isCreatingPayment.set(false)))
       .subscribe({
         next: (response) => {
           this.payment.set(response);
+          this.persistPaymentReference(response);
+          this.persistPendingGiftPayment(response);
+
+          if (paymentMethod !== 'pix') {
+            this.openCheckoutPayment(response);
+            return;
+          }
+
           const hasPixPaymentData = this.pixQrCodeImage(response) || this.pixCopyPasteCode(response) || this.pixTicketUrl(response);
           if (!hasPixPaymentData) {
             this.paymentValidationMessage.set('');
@@ -86,8 +116,6 @@ export class GiftPaymentModalComponent {
             return;
           }
 
-          this.persistPaymentReference(response);
-          this.persistPendingGiftPayment(response);
           this.paymentValidationMessage.set('Pix gerado pelo Mercado Pago. Use o QR Code, copie o codigo ou abra o link de pagamento.');
         },
         error: (error) => {
@@ -136,6 +164,17 @@ export class GiftPaymentModalComponent {
     return this.pickString(response, ['ticketUrl', 'ticket_url', 'paymentUrl', 'checkoutUrl']);
   }
 
+  selectedPaymentLabel(): string {
+    switch (this.selectedPaymentMethod()) {
+      case 'credit_card':
+        return 'cartao de credito';
+      case 'boleto':
+        return 'boleto';
+      default:
+        return 'Pix';
+    }
+  }
+
   copyPixCode(): void {
     const pixCode = this.pixCopyPasteCode();
     if (!pixCode || !navigator.clipboard) {
@@ -170,6 +209,31 @@ export class GiftPaymentModalComponent {
     );
   }
 
+  private openCheckoutPayment(response: PaymentResponse): void {
+    const checkoutUrl = this.pickString(response, [
+      'sandboxInitPoint',
+      'sandbox_init_point',
+      'initPoint',
+      'init_point',
+      'paymentUrl',
+      'payment_url',
+      'checkoutUrl',
+      'ticketUrl',
+      'ticket_url',
+      'boletoUrl',
+      'boleto_url'
+    ]);
+
+    if (!checkoutUrl) {
+      this.paymentValidationMessage.set('');
+      this.paymentError.set(`O pagamento por ${this.selectedPaymentLabel()} foi preparado, mas nao recebemos o link do Mercado Pago.`);
+      return;
+    }
+
+    this.paymentValidationMessage.set(`Abrindo pagamento por ${this.selectedPaymentLabel()} no Mercado Pago...`);
+    window.location.href = checkoutUrl;
+  }
+
   private pickString(response: object, keys: string[]): string {
     const record = response as Record<string, unknown>;
     for (const key of keys) {
@@ -187,6 +251,6 @@ export class GiftPaymentModalComponent {
       return 'Confira os dados informados e tente novamente.';
     }
 
-    return 'Nao foi possivel gerar o Pix agora. Tente novamente em instantes.';
+    return `Nao foi possivel gerar o pagamento por ${this.selectedPaymentLabel()} agora. Tente novamente em instantes.`;
   }
 }

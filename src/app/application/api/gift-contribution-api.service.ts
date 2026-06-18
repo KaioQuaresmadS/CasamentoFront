@@ -68,6 +68,30 @@ export interface MercadoPagoPaymentStatusResponse {
 export class GiftContributionApiService {
   constructor(private readonly http: HttpClient) {}
 
+  createMercadoPagoPayment(
+    giftId: string,
+    payerName: string,
+    payerEmail: string,
+    payerPhone: string,
+    amount: number,
+    paymentMethod: Exclude<MercadoPagoPaymentMethod, 'pix' | 'mercado_pago'>,
+    mode: GiftPurchaseMode,
+    quotaQuantity: number
+  ): Observable<CreateMercadoPagoPaymentResponse> {
+    const request: CreateMercadoPagoPaymentRequest = {
+      giftId,
+      payerName,
+      payerEmail,
+      payerPhone,
+      amount,
+      paymentMethod,
+      mode: mode === 'full' ? 'FullGift' : 'Quota',
+      quotaQuantity: mode === 'full' ? 0 : quotaQuantity
+    };
+
+    return this.http.post<CreateMercadoPagoPaymentResponse>(`${API_BASE_URL}/payments/create`, request);
+  }
+
   createPixPayment(
     giftId: string,
     payerName: string,

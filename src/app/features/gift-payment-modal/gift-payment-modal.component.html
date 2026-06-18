@@ -48,14 +48,28 @@
           <span>Total</span>
           <strong>{{ paymentAmount | currency:'BRL':'symbol':'1.2-2' }}</strong>
         </div>
-        <span class="payment-box__hint">O Pix sera gerado pelo Mercado Pago com QR Code e codigo copia e cola.</span>
+        <span class="payment-box__hint">
+          Escolha Pix para QR Code ou finalize cartao e boleto no Mercado Pago.
+        </span>
+      </div>
+
+      <div class="payment-methods" aria-label="Forma de pagamento">
+        <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'pix' }" (click)="setPaymentMethod('pix')">
+          Pix
+        </button>
+        <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'credit_card' }" (click)="setPaymentMethod('credit_card')">
+          Cartao de credito
+        </button>
+        <button type="button" [ngClass]="{ active: selectedPaymentMethod() === 'boleto' }" (click)="setPaymentMethod('boleto')">
+          Boleto
+        </button>
       </div>
 
       <button type="button" [disabled]="isCreatingPayment()" (click)="startPayment()">
-        {{ isCreatingPayment() ? 'Gerando...' : 'Gerar Pix' }}
+        {{ isCreatingPayment() ? 'Gerando...' : 'Pagar com ' + selectedPaymentLabel() }}
       </button>
 
-      @if (payment()) {
+      @if (payment() && selectedPaymentMethod() === 'pix') {
         <section class="pix-payment" aria-label="Pagamento Pix">
           @if (pixQrCodeImage()) {
             <img class="pix-payment__qr" [src]="pixQrCodeImage()" alt="QR Code Pix gerado pelo Mercado Pago" />

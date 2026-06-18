@@ -95,6 +95,7 @@ button {
 }
 
 button.secondary,
+.payment-methods button,
 .choice-group button {
   @include button-secondary;
 }
@@ -131,6 +132,19 @@ a.pix-payment__link {
   margin: 22px 0;
 }
 
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0 12px;
+}
+
+.payment-methods button {
+  min-height: 46px;
+  padding-inline: 10px;
+}
+
+.payment-methods button.active,
 .choice-group button.active {
   color: $color-white;
   background: $color-olive-dark;
@@ -251,6 +265,7 @@ a.pix-payment__link {
 @media (max-width: 760px) {
   .modal,
   .payment-box,
+  .payment-methods,
   .choice-group,
   .contributor-grid {
     grid-template-columns: 1fr;
