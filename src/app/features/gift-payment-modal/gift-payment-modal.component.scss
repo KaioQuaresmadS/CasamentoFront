@@ -99,6 +99,17 @@ button.secondary,
   @include button-secondary;
 }
 
+a.pix-payment__link {
+  @include button-secondary;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  text-align: center;
+  text-decoration: none;
+}
+
 .icon-button {
   position: absolute;
   top: 12px;
@@ -173,6 +184,44 @@ button.secondary,
 .payment-box strong {
   color: $color-rose-dark;
   font-size: 1.5rem;
+}
+
+.pix-payment {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba($color-ink, 0.12);
+  border-radius: 8px;
+  background: rgba($color-white, 0.76);
+}
+
+.pix-payment__qr {
+  width: min(240px, 100%);
+  aspect-ratio: 1;
+  justify-self: center;
+  object-fit: contain;
+  padding: 10px;
+  border-radius: 6px;
+  background: $color-white;
+  box-shadow: 0 10px 26px rgba($color-night, 0.12);
+}
+
+.pix-payment__code {
+  display: grid;
+  gap: 8px;
+  color: $color-ink;
+  font-weight: 800;
+}
+
+.pix-payment__code textarea {
+  @include input;
+
+  min-height: 96px;
+  resize: vertical;
+  color: $color-ink;
+  font: 0.82rem/1.45 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  overflow-wrap: anywhere;
 }
 
 .success,

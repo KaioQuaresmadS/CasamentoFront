@@ -48,12 +48,34 @@
           <span>Total</span>
           <strong>{{ paymentAmount | currency:'BRL':'symbol':'1.2-2' }}</strong>
         </div>
-        <span class="payment-box__hint">Voce sera redirecionado ao Mercado Pago para escolher Pix, cartao ou boleto.</span>
+        <span class="payment-box__hint">O Pix sera gerado pelo Mercado Pago com QR Code e codigo copia e cola.</span>
       </div>
 
       <button type="button" [disabled]="isCreatingPayment()" (click)="startPayment()">
-        {{ isCreatingPayment() ? 'Abrindo...' : 'Pagar com Mercado Pago' }}
+        {{ isCreatingPayment() ? 'Gerando...' : 'Gerar Pix' }}
       </button>
+
+      @if (payment()) {
+        <section class="pix-payment" aria-label="Pagamento Pix">
+          @if (pixQrCodeImage()) {
+            <img class="pix-payment__qr" [src]="pixQrCodeImage()" alt="QR Code Pix gerado pelo Mercado Pago" />
+          }
+
+          @if (pixCopyPasteCode()) {
+            <label class="pix-payment__code">
+              Pix copia e cola
+              <textarea readonly rows="4">{{ pixCopyPasteCode() }}</textarea>
+            </label>
+            <button class="secondary" type="button" (click)="copyPixCode()">Copiar codigo Pix</button>
+          }
+
+          @if (pixTicketUrl()) {
+            <a class="pix-payment__link" [href]="pixTicketUrl()" target="_blank" rel="noopener noreferrer">
+              Abrir pagamento no Mercado Pago
+            </a>
+          }
+        </section>
+      }
 
       @if (paymentError()) {
         <p class="error">{{ paymentError() }}</p>

@@ -66,12 +66,11 @@ export class GiftPaymentModalComponent {
     this.paymentValidationMessage.set('Preparando seu pagamento...');
 
     this.contributionApiService
-      .createMercadoPagoPayment(
+      .createPixPayment(
         this.gift.id,
         this.contributor.name,
         this.contributor.email,
         this.contributor.phone,
-        'mercado_pago',
         this.selectedMode(),
         this.quotaQuantity()
       )
@@ -79,17 +78,16 @@ export class GiftPaymentModalComponent {
       .subscribe({
         next: (response) => {
           this.payment.set(response);
-          const checkoutUrl = this.extractCheckoutUrl(response);
-          if (!checkoutUrl) {
+          const hasPixPaymentData = this.pixQrCodeImage(response) || this.pixCopyPasteCode(response) || this.pixTicketUrl(response);
+          if (!hasPixPaymentData) {
             this.paymentValidationMessage.set('');
-            this.paymentError.set('O pagamento foi preparado, mas nao conseguimos abrir a pagina do Mercado Pago.');
+            this.paymentError.set('O pagamento foi preparado, mas nao recebemos os dados do Pix.');
             return;
           }
 
           this.persistPaymentReference(response);
           this.persistPendingGiftPayment(response);
-          this.paymentValidationMessage.set('Finalize o pagamento no Mercado Pago. Depois voltaremos a verificar automaticamente.');
-          window.location.href = checkoutUrl;
+          this.paymentValidationMessage.set('Pix gerado pelo Mercado Pago. Use o QR Code, copie o codigo ou abra o link de pagamento.');
         },
         error: (error) => {
           this.paymentValidationMessage.set('');
@@ -108,13 +106,42 @@ export class GiftPaymentModalComponent {
     this.paymentError.set('');
   }
 
-  private extractCheckoutUrl(response: PaymentResponse): string {
-    return this.pickString(response, [
-      'sandboxInitPoint',
-      'sandbox_init_point',
-      'initPoint',
-      'init_point'
-    ]);
+  pixQrCodeImage(response: PaymentResponse | null = this.payment()): string {
+    if (!response) {
+      return '';
+    }
+
+    const qrCodeBase64 = this.pickString(response, ['qrCodeBase64', 'qr_code_base64']);
+    if (!qrCodeBase64) {
+      return '';
+    }
+
+    return qrCodeBase64.startsWith('data:image') ? qrCodeBase64 : `data:image/png;base64,${qrCodeBase64}`;
+  }
+
+  pixCopyPasteCode(response: PaymentResponse | null = this.payment()): string {
+    if (!response) {
+      return '';
+    }
+
+    return this.pickString(response, ['qrCode', 'qr_code', 'pixCopyPaste', 'pix_copy_paste']);
+  }
+
+  pixTicketUrl(response: PaymentResponse | null = this.payment()): string {
+    if (!response) {
+      return '';
+    }
+
+    return this.pickString(response, ['ticketUrl', 'ticket_url', 'paymentUrl', 'checkoutUrl']);
+  }
+
+  copyPixCode(): void {
+    const pixCode = this.pixCopyPasteCode();
+    if (!pixCode || !navigator.clipboard) {
+      return;
+    }
+
+    void navigator.clipboard.writeText(pixCode);
   }
 
   private persistPaymentReference(response: PaymentResponse): void {
@@ -154,6 +181,6 @@ export class GiftPaymentModalComponent {
       return 'Confira os dados informados e tente novamente.';
     }
 
-    return 'Nao foi possivel abrir o pagamento agora. Tente novamente em instantes.';
+    return 'Nao foi possivel gerar o Pix agora. Tente novamente em instantes.';
   }
 }
