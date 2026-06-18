@@ -211,8 +211,6 @@ export class GiftPaymentModalComponent {
 
   private openCheckoutPayment(response: PaymentResponse): void {
     const checkoutUrl = this.pickString(response, [
-      'sandboxInitPoint',
-      'sandbox_init_point',
       'initPoint',
       'init_point',
       'paymentUrl',
@@ -221,7 +219,9 @@ export class GiftPaymentModalComponent {
       'ticketUrl',
       'ticket_url',
       'boletoUrl',
-      'boleto_url'
+      'boleto_url',
+      'sandboxInitPoint',
+      'sandbox_init_point'
     ]);
 
     if (!checkoutUrl) {
