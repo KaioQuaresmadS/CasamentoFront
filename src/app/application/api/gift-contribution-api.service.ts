@@ -11,14 +11,16 @@ export interface CreateMercadoPagoPaymentRequest {
   payerName: string;
   payerEmail: string;
   payerPhone: string;
+  amount: number;
   paymentMethod?: MercadoPagoPaymentMethod | null;
   mode: 'FullGift' | 'Quota';
   quotaQuantity: number;
 }
 
 export interface CreateMercadoPagoPaymentResponse {
-  id: string;
-  giftContributionId: string;
+  id?: string;
+  payment_id?: string;
+  giftContributionId?: string;
   externalReference?: string;
   external_reference?: string;
   status?: string;
@@ -71,6 +73,7 @@ export class GiftContributionApiService {
     payerName: string,
     payerEmail: string,
     payerPhone: string,
+    amount: number,
     mode: GiftPurchaseMode,
     quotaQuantity: number
   ): Observable<CreateMercadoPagoPaymentResponse> {
@@ -79,6 +82,7 @@ export class GiftContributionApiService {
       payerName,
       payerEmail,
       payerPhone,
+      amount,
       paymentMethod: 'pix',
       mode: mode === 'full' ? 'FullGift' : 'Quota',
       quotaQuantity: mode === 'full' ? 0 : quotaQuantity

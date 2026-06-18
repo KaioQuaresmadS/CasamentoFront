@@ -71,6 +71,7 @@ export class GiftPaymentModalComponent {
         this.contributor.name,
         this.contributor.email,
         this.contributor.phone,
+        this.paymentAmount,
         this.selectedMode(),
         this.quotaQuantity()
       )
@@ -145,7 +146,11 @@ export class GiftPaymentModalComponent {
   }
 
   private persistPaymentReference(response: PaymentResponse): void {
-    localStorage.setItem('paymentId', response.id);
+    const paymentId = this.pickString(response, ['id', 'payment_id']);
+    if (paymentId) {
+      localStorage.setItem('paymentId', paymentId);
+    }
+
     const externalReference = this.pickString(response, ['externalReference', 'external_reference']);
     if (externalReference) {
       localStorage.setItem('externalReference', externalReference);
@@ -153,10 +158,11 @@ export class GiftPaymentModalComponent {
   }
 
   private persistPendingGiftPayment(response: PaymentResponse): void {
+    const paymentId = this.pickString(response, ['id', 'payment_id']);
     localStorage.setItem(
       'pendingGiftPayment',
       JSON.stringify({
-        paymentId: response.id,
+        paymentId,
         giftId: this.gift.id,
         mode: this.selectedMode(),
         amount: this.paymentAmount
