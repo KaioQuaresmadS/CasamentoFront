@@ -71,6 +71,11 @@
 
       @if (payment() && selectedPaymentMethod() === 'pix') {
         <section class="pix-payment" aria-label="Pagamento Pix">
+          <div class="pix-payment__status">
+            <strong>Aguardando pagamento</strong>
+            <span>A confirmação aparece no app do seu banco. Depois de aprovado, o Mercado Pago envia a confirmação automaticamente.</span>
+          </div>
+
           @if (pixQrCodeImage()) {
             <img class="pix-payment__qr" [src]="pixQrCodeImage()" alt="QR Code Pix gerado pelo Mercado Pago" />
           }

@@ -91,6 +91,15 @@ export class GiftApiService {
       return true;
     }
 
+    const confirmedAmount = this.getConfirmedAmount(gift);
+    if (gift.price > 0 && typeof confirmedAmount === 'number' && confirmedAmount >= gift.price) {
+      return true;
+    }
+
+    if (gift.reservedPercent >= 100) {
+      return true;
+    }
+
     const status = String(gift.paymentStatus ?? gift.status ?? '').toLowerCase();
     return ['approved', 'paid', 'confirmed', 'completed', 'purchased'].includes(status);
   }

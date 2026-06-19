@@ -101,11 +101,12 @@ export class GiftPaymentModalComponent {
       .subscribe({
         next: (response) => {
           this.payment.set(response);
-          this.persistPaymentReference(response);
-          this.persistPendingGiftPayment(response);
 
           if (paymentMethod !== 'pix') {
-            this.openCheckoutPayment(response);
+            if (this.openCheckoutPayment(response, paymentMethod)) {
+              this.persistPaymentReference(response);
+              this.persistPendingGiftPayment(response);
+            }
             return;
           }
 
@@ -116,7 +117,9 @@ export class GiftPaymentModalComponent {
             return;
           }
 
-          this.paymentValidationMessage.set('Pix gerado pelo Mercado Pago. Use o QR Code, copie o codigo ou abra o link de pagamento.');
+          this.persistPaymentReference(response);
+          this.persistPendingGiftPayment(response);
+          this.paymentValidationMessage.set('Pix gerado pelo Mercado Pago. Use o QR Code ou copie o codigo e confirme o pagamento no app do seu banco.');
         },
         error: (error) => {
           this.paymentValidationMessage.set('');
@@ -209,29 +212,37 @@ export class GiftPaymentModalComponent {
     );
   }
 
-  private openCheckoutPayment(response: PaymentResponse): void {
-    const checkoutUrl = this.pickString(response, [
-      'initPoint',
-      'init_point',
-      'paymentUrl',
-      'payment_url',
-      'checkoutUrl',
-      'ticketUrl',
-      'ticket_url',
-      'boletoUrl',
-      'boleto_url',
-      'sandboxInitPoint',
-      'sandbox_init_point'
-    ]);
+  private openCheckoutPayment(response: PaymentResponse, paymentMethod: Exclude<CheckoutPaymentMethod, 'pix'>): boolean {
+    const checkoutUrl =
+      paymentMethod === 'boleto'
+        ? this.pickString(response, ['ticketUrl', 'ticket_url', 'boletoUrl', 'boleto_url'])
+        : this.pickString(response, [
+            'initPoint',
+            'init_point',
+            'paymentUrl',
+            'payment_url',
+            'checkoutUrl',
+            'ticketUrl',
+            'ticket_url',
+            'boletoUrl',
+            'boleto_url',
+            'sandboxInitPoint',
+            'sandbox_init_point'
+          ]);
 
     if (!checkoutUrl) {
       this.paymentValidationMessage.set('');
-      this.paymentError.set(`O pagamento por ${this.selectedPaymentLabel()} foi preparado, mas nao recebemos o link do Mercado Pago.`);
-      return;
+      this.paymentError.set(
+        paymentMethod === 'boleto'
+          ? 'O boleto ainda nao foi gerado pelo Mercado Pago. Use Pix ou cartao por enquanto.'
+          : `O pagamento por ${this.selectedPaymentLabel()} foi preparado, mas nao recebemos o link do Mercado Pago.`
+      );
+      return false;
     }
 
     this.paymentValidationMessage.set(`Abrindo pagamento por ${this.selectedPaymentLabel()} no Mercado Pago...`);
     window.location.href = checkoutUrl;
+    return true;
   }
 
   private pickString(response: object, keys: string[]): string {
@@ -248,9 +259,38 @@ export class GiftPaymentModalComponent {
 
   private getPaymentErrorMessage(error: unknown): string {
     if (error instanceof HttpErrorResponse && error.status === 400) {
-      return 'Confira os dados informados e tente novamente.';
+      const backendMessage = this.extractBackendErrorMessage(error.error);
+      return backendMessage || 'Confira os dados informados e tente novamente.';
     }
 
     return `Nao foi possivel gerar o pagamento por ${this.selectedPaymentLabel()} agora. Tente novamente em instantes.`;
+  }
+
+  private extractBackendErrorMessage(errorBody: unknown): string {
+    if (!errorBody || typeof errorBody !== 'object') {
+      return '';
+    }
+
+    const body = errorBody as {
+      detail?: unknown;
+      title?: unknown;
+      errors?: Record<string, unknown>;
+    };
+
+    if (typeof body.detail === 'string' && body.detail.trim()) {
+      return body.detail;
+    }
+
+    if (body.errors) {
+      const firstError = Object.values(body.errors)
+        .flatMap((value) => (Array.isArray(value) ? value : [value]))
+        .find((value): value is string => typeof value === 'string' && value.trim().length > 0);
+
+      if (firstError) {
+        return firstError;
+      }
+    }
+
+    return typeof body.title === 'string' && body.title.trim() ? body.title : '';
   }
 }

@@ -221,6 +221,26 @@ a.pix-payment__link {
   box-shadow: 0 10px 26px rgba($color-night, 0.12);
 }
 
+.pix-payment__status {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  color: $color-ink;
+  background: rgba($color-olive-soft, 0.64);
+}
+
+.pix-payment__status strong {
+  font-size: 0.94rem;
+}
+
+.pix-payment__status span {
+  color: rgba($color-ink, 0.72);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
 .pix-payment__code {
   display: grid;
   gap: 8px;
