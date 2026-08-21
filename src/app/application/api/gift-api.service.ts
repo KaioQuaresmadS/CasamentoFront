@@ -62,41 +62,77 @@ export class GiftApiService {
   }
 
   private mapGift(gift: GiftResponse): Gift {
+    const confirmedAmount = this.getConfirmedAmount(gift);
+    const reservedPercent = this.getReservedPercent(gift, confirmedAmount);
+
     return {
       id: gift.id,
       name: gift.name,
       description: gift.description,
       image: gift.imageUrl,
       price: gift.price,
-      confirmedAmount: this.getConfirmedAmount(gift),
-      reservedPercent: gift.reservedPercent,
-      isPurchased: this.isGiftPurchased(gift),
+      confirmedAmount,
+      reservedPercent,
+      isPurchased: this.isGiftPurchased(gift, confirmedAmount, reservedPercent),
       paymentStatus: gift.paymentStatus ?? gift.status
     };
   }
 
   private getConfirmedAmount(gift: GiftResponse): number | undefined {
-    return (
+    const reportedAmount =
       gift.confirmedAmount ??
       gift.paidAmount ??
       gift.receivedAmount ??
       gift.contributedAmount ??
       gift.totalPaid ??
-      gift.totalContributed
-    );
+      gift.totalContributed;
+
+    const validReportedAmount = this.toNonNegativeNumber(reportedAmount);
+    const reservedAmount = this.getReservedAmount(gift);
+
+    if (validReportedAmount === undefined && reservedAmount === undefined) {
+      return undefined;
+    }
+
+    const amount = Math.max(validReportedAmount ?? 0, reservedAmount ?? 0);
+    return gift.price > 0 ? Math.min(gift.price, amount) : amount;
   }
 
-  private isGiftPurchased(gift: GiftResponse): boolean {
+  private getReservedPercent(gift: GiftResponse, confirmedAmount: number | undefined): number {
+    const reservedPercent = this.toNonNegativeNumber(gift.reservedPercent) ?? 0;
+    const confirmedPercent =
+      gift.price > 0 && typeof confirmedAmount === 'number' ? (confirmedAmount / gift.price) * 100 : 0;
+
+    return Math.min(100, Math.max(reservedPercent, confirmedPercent));
+  }
+
+  private getReservedAmount(gift: GiftResponse): number | undefined {
+    if (gift.price <= 0) {
+      return undefined;
+    }
+
+    const reservedPercent = this.toNonNegativeNumber(gift.reservedPercent);
+    if (reservedPercent === undefined) {
+      return undefined;
+    }
+
+    return gift.price * Math.min(100, reservedPercent) / 100;
+  }
+
+  private toNonNegativeNumber(value: unknown): number | undefined {
+    return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : undefined;
+  }
+
+  private isGiftPurchased(gift: GiftResponse, confirmedAmount: number | undefined, reservedPercent: number): boolean {
     if (gift.isPurchased ?? gift.purchased) {
       return true;
     }
 
-    const confirmedAmount = this.getConfirmedAmount(gift);
     if (gift.price > 0 && typeof confirmedAmount === 'number' && confirmedAmount >= gift.price) {
       return true;
     }
 
-    if (gift.reservedPercent >= 100) {
+    if (reservedPercent >= 100) {
       return true;
     }
 
